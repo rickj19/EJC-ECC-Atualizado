@@ -8,6 +8,7 @@ import Dashboard from './pages/ejc/Dashboard';
 import { JovemList } from './components/ejc/JovemList';
 import { JovemForm } from './components/ejc/JovemForm';
 import { JovemDetails } from './components/ejc/JovemDetails';
+import { EJCLayout } from './components/ejc/EJCLayout';
 
 export default function App() {
   return (
@@ -21,14 +22,16 @@ export default function App() {
             path="/ejc/*" 
             element={
               <ProtectedRoute>
-                <Routes>
-                  <Route path="dashboard" element={<Dashboard />} />
-                  <Route path="jovens" element={<JovemList />} />
-                  <Route path="jovens/novo" element={<JovemForm />} />
-                  <Route path="jovens/editar/:id" element={<EditJovemWrapper />} />
-                  <Route path="jovens/visualizar/:id" element={<JovemDetails />} />
-                  <Route path="*" element={<Navigate to="dashboard" replace />} />
-                </Routes>
+                <EJCLayout>
+                  <Routes>
+                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="jovens" element={<JovemList />} />
+                    <Route path="jovens/novo" element={<JovemForm />} />
+                    <Route path="jovens/editar/:id" element={<EditJovemWrapper />} />
+                    <Route path="jovens/visualizar/:id" element={<JovemDetails />} />
+                    <Route path="*" element={<Navigate to="dashboard" replace />} />
+                  </Routes>
+                </EJCLayout>
               </ProtectedRoute>
             } 
           />

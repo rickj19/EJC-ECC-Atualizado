@@ -216,10 +216,12 @@ export function JovemList() {
           <table className="w-full text-left">
             <thead>
               <tr className="bg-zinc-50/50 border-bottom border-zinc-100">
-                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Jovem</th>
-                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Contato</th>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Foto</th>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Nome completo</th>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Como gostaria de ser chamado</th>
                 <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Bairro</th>
-                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider text-center">EJC</th>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Contato</th>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider text-center">Vivenciou EJC</th>
                 <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider text-right">Ações</th>
               </tr>
             </thead>
@@ -228,34 +230,32 @@ export function JovemList() {
                 filteredJovens.map((jovem) => (
                   <tr key={jovem.id} className="hover:bg-zinc-50/50 transition-colors group">
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-zinc-100 overflow-hidden border border-zinc-200 flex-shrink-0">
-                          {jovem.foto_url ? (
-                            <img 
-                              src={jovem.foto_url} 
-                              alt={jovem.nome_completo} 
-                              className="w-full h-full object-cover"
-                              referrerPolicy="no-referrer"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-zinc-400">
-                              <User size={20} />
-                            </div>
-                          )}
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-zinc-900">{jovem.nome_completo}</p>
-                          {jovem.nome_chamado && (
-                            <p className="text-xs text-zinc-500">"{jovem.nome_chamado}"</p>
-                          )}
-                        </div>
+                      <div className="w-10 h-10 rounded-full bg-zinc-100 overflow-hidden border border-zinc-200 flex-shrink-0">
+                        {jovem.foto_url ? (
+                          <img 
+                            src={jovem.foto_url} 
+                            alt={jovem.nome_completo} 
+                            className="w-full h-full object-cover"
+                            referrerPolicy="no-referrer"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-zinc-400">
+                            <User size={20} />
+                          </div>
+                        )}
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="text-sm text-zinc-600">{jovem.contato}</p>
+                      <p className="text-sm font-semibold text-zinc-900">{jovem.nome_completo}</p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="text-sm text-zinc-600">{jovem.nome_chamado || '-'}</p>
                     </td>
                     <td className="px-6 py-4">
                       <p className="text-sm text-zinc-600">{jovem.bairro || '-'}</p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="text-sm text-zinc-600">{jovem.contato}</p>
                     </td>
                     <td className="px-6 py-4 text-center">
                       <span className={cn(
