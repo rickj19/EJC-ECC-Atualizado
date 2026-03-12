@@ -4,6 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My Google AI Studio App</title>
+    <script>
+      // Fix for "Cannot set property fetch of #<Window> which has only a getter"
+      // This happens in some iframe environments when libraries try to polyfill fetch
+      (function() {
+        try {
+          var desc = Object.getOwnPropertyDescriptor(window, 'fetch');
+          if (desc && desc.get && !desc.set && desc.configurable) {
+            Object.defineProperty(window, 'fetch', {
+              get: desc.get,
+              set: function() { /* ignore */ },
+              configurable: true
+            });
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
