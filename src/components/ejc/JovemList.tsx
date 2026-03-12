@@ -16,19 +16,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase/client';
 import { cn } from '../../lib/utils';
-
-interface Jovem {
-  id: string;
-  nome_completo: string;
-  nome_chamado: string;
-  contato: string;
-  bairro: string;
-  foto_url: string;
-  vivenciou_ejc: boolean;
-  sacramentos: string[];
-  qual_pastoral: string;
-  membro_pastoral: boolean;
-}
+import { Jovem } from '../../types/jovem';
 
 export function JovemList() {
   const navigate = useNavigate();
@@ -102,7 +90,7 @@ export function JovemList() {
       const matchesSacramento = !filterSacramento || j.sacramentos?.includes(filterSacramento);
       
       const matchesPastoral = !filterPastoral || 
-                             (j.membro_pastoral && j.qual_pastoral?.toLowerCase().includes(filterPastoral.toLowerCase()));
+                             (j.membro_pastoral && (j.qual_pastoral || '').toLowerCase().includes(filterPastoral.toLowerCase()));
       
       const matchesVivenciou = filterVivenciou === 'all' || j.vivenciou_ejc === filterVivenciou;
 

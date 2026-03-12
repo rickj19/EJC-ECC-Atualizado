@@ -15,17 +15,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase/client';
 import { cn } from '../../lib/utils';
-
-interface Jovem {
-  id: string;
-  nome_completo: string;
-  nome_chamado: string;
-  bairro: string;
-  vivenciou_ejc: boolean;
-  sacramentos: string[];
-  aptidao_artistica: boolean;
-  created_at: string;
-}
+import { Jovem } from '../../types/jovem';
 
 export function EJCDashboard() {
   const navigate = useNavigate();
