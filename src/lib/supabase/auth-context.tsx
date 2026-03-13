@@ -65,7 +65,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const hasPermission = (permission: keyof Profile): boolean => {
+    // If we are loading, we don't know yet, but the guards should handle this
+    if (loading) return false;
     if (!profile) return false;
+    
     // Admin has all permissions
     if (profile?.role === 'admin') return true;
     
@@ -78,6 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const initializeAuth = async () => {
       console.log('[Auth] auth start');
+      setLoading(true);
       try {
         const { data: { session: initialSession }, error } = await supabase.auth.getSession();
         
@@ -89,14 +93,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setSession(initialSession);
           const currentUser = initialSession?.user ?? null;
           setUser(currentUser);
-          console.log('[Auth] session loaded');
           
           if (currentUser?.id) {
+            console.log('[Auth] session loaded, fetching profile...');
             const p = await fetchProfile(currentUser.id);
             if (mounted) {
               setProfile(p);
             }
           } else {
+            console.log('[Auth] no session found');
             if (mounted) setProfile(null);
           }
         }
@@ -117,19 +122,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       console.log('[Auth] state changed:', event);
       
-      setSession(currentSession);
       const currentUser = currentSession?.user ?? null;
+      
+      // If it's a sign out, clear everything and stop loading
+      if (event === 'SIGNED_OUT') {
+        setSession(null);
+        setUser(null);
+        setProfile(null);
+        setLoading(false);
+        return;
+      }
+
+      // For other events (SIGNED_IN, TOKEN_REFRESHED, etc.)
+      setLoading(true);
+      setSession(currentSession);
       setUser(currentUser);
       
       if (currentUser?.id) {
         const p = await fetchProfile(currentUser.id);
-        if (mounted) setProfile(p);
+        if (mounted) {
+          setProfile(p);
+          setLoading(false);
+        }
       } else {
-        if (mounted) setProfile(null);
+        if (mounted) {
+          setProfile(null);
+          setLoading(false);
+        }
       }
-      
-      // Ensure loading is false after any auth change
-      if (mounted) setLoading(false);
     });
 
     return () => {
