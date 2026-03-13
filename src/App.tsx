@@ -9,13 +9,15 @@ import { JovemList } from './components/ejc/JovemList';
 import { JovemForm } from './components/ejc/JovemForm';
 import { JovemDetails } from './components/ejc/JovemDetails';
 import { EJCLayout } from './components/ejc/EJCLayout';
+import { RoleGuard } from './components/RoleGuard';
 
 export default function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<Login />} />
           
           {/* Protected EJC Routes */}
           <Route 
@@ -25,10 +27,29 @@ export default function App() {
                 <EJCLayout>
                   <Routes>
                     <Route path="dashboard" element={<Dashboard />} />
-                    <Route path="jovens" element={<JovemList />} />
-                    <Route path="jovens/novo" element={<JovemForm />} />
-                    <Route path="jovens/editar/:id" element={<EditJovemWrapper />} />
-                    <Route path="jovens/visualizar/:id" element={<JovemDetails />} />
+                    
+                    {/* Rotas de Jovens - Admin e Equipe */}
+                    <Route path="jovens" element={
+                      <RoleGuard allowedRoles={['admin', 'equipe']}>
+                        <JovemList />
+                      </RoleGuard>
+                    } />
+                    <Route path="jovens/novo" element={
+                      <RoleGuard allowedRoles={['admin', 'equipe']}>
+                        <JovemForm />
+                      </RoleGuard>
+                    } />
+                    <Route path="jovens/editar/:id" element={
+                      <RoleGuard allowedRoles={['admin', 'equipe']}>
+                        <EditJovemWrapper />
+                      </RoleGuard>
+                    } />
+                    <Route path="jovens/visualizar/:id" element={
+                      <RoleGuard allowedRoles={['admin', 'equipe', 'participante']}>
+                        <JovemDetails />
+                      </RoleGuard>
+                    } />
+                    
                     <Route path="*" element={<Navigate to="dashboard" replace />} />
                   </Routes>
                 </EJCLayout>
@@ -37,7 +58,7 @@ export default function App() {
           />
           
           {/* Fallback to login */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </Router>
     </AuthProvider>

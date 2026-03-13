@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { Jovem } from '../../types/jovem';
+import { useAuth } from '../../lib/supabase/auth-context';
 
 interface JovemTableProps {
   jovens: Jovem[];
@@ -40,7 +41,7 @@ export function JovemTable({
   pageSize,
   onPageChange
 }: JovemTableProps) {
-  
+  const { role } = useAuth();
   const totalPages = Math.ceil(totalCount / pageSize);
 
   const SortButton = ({ field, label }: { field: string, label: string }) => (
@@ -135,13 +136,15 @@ export function JovemTable({
                       >
                         <Edit2 size={18} />
                       </button>
-                      <button
-                        onClick={() => onDelete(jovem.id)}
-                        className="p-2 text-zinc-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-                        title="Excluir"
-                      >
-                        <Trash2 size={18} />
-                      </button>
+                      {role === 'admin' && (
+                        <button
+                          onClick={() => onDelete(jovem.id)}
+                          className="p-2 text-zinc-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                          title="Excluir"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      )}
                     </div>
                     {/* Mobile Actions */}
                     <div className="md:hidden">

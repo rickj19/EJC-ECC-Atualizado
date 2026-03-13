@@ -17,8 +17,11 @@ import { supabase } from '../../lib/supabase/client';
 import { cn } from '../../lib/utils';
 import { Jovem } from '../../types/jovem';
 
+import { useAuth } from '../../lib/supabase/auth-context';
+
 export function EJCDashboard() {
   const navigate = useNavigate();
+  const { role } = useAuth();
   const [jovens, setJovens] = useState<Jovem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -119,46 +122,52 @@ export function EJCDashboard() {
           icon={Star} 
           colorClass="bg-emerald-100 text-emerald-600" 
         />
-        <StatCard 
-          title="Não Vivenciaram" 
-          value={stats.naoVivenciou} 
-          icon={UserMinus} 
-          colorClass="bg-orange-100 text-orange-600" 
-        />
-        <StatCard 
-          title="Aptidão Artística" 
-          value={stats.comAptidao} 
-          icon={Music} 
-          colorClass="bg-purple-100 text-purple-600" 
-        />
+        {role !== 'participante' && (
+          <>
+            <StatCard 
+              title="Não Vivenciaram" 
+              value={stats.naoVivenciou} 
+              icon={UserMinus} 
+              colorClass="bg-orange-100 text-orange-600" 
+            />
+            <StatCard 
+              title="Aptidão Artística" 
+              value={stats.comAptidao} 
+              icon={Music} 
+              colorClass="bg-purple-100 text-purple-600" 
+            />
+          </>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Sacramentos & Bairros */}
         <div className="lg:col-span-1 space-y-8">
           {/* Sacramentos */}
-          <div className="bg-white p-6 rounded-2xl border border-zinc-100 shadow-sm">
-            <h3 className="text-sm font-bold text-zinc-900 uppercase tracking-tight mb-6 flex items-center gap-2">
-              <CheckCircle2 size={18} className="text-emerald-500" />
-              Sacramentos
-            </h3>
-            <div className="space-y-4">
-              {Object.entries(stats.sacramentosCount).map(([sac, count]) => (
-                <div key={sac} className="space-y-2">
-                  <div className="flex justify-between text-sm font-medium">
-                    <span className="text-zinc-600">{sac}</span>
-                    <span className="text-zinc-900">{count as number}</span>
+          {role !== 'participante' && (
+            <div className="bg-white p-6 rounded-2xl border border-zinc-100 shadow-sm">
+              <h3 className="text-sm font-bold text-zinc-900 uppercase tracking-tight mb-6 flex items-center gap-2">
+                <CheckCircle2 size={18} className="text-emerald-500" />
+                Sacramentos
+              </h3>
+              <div className="space-y-4">
+                {Object.entries(stats.sacramentosCount).map(([sac, count]) => (
+                  <div key={sac} className="space-y-2">
+                    <div className="flex justify-between text-sm font-medium">
+                      <span className="text-zinc-600">{sac}</span>
+                      <span className="text-zinc-900">{count as number}</span>
+                    </div>
+                    <div className="h-2 bg-zinc-100 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-zinc-900 transition-all duration-1000" 
+                        style={{ width: `${((count as number) / (stats.total || 1)) * 100}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="h-2 bg-zinc-100 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-zinc-900 transition-all duration-1000" 
-                      style={{ width: `${((count as number) / (stats.total || 1)) * 100}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Top Bairros */}
           <div className="bg-white p-6 rounded-2xl border border-zinc-100 shadow-sm">
@@ -194,13 +203,15 @@ export function EJCDashboard() {
                 <Clock size={18} className="text-blue-500" />
                 Últimos Cadastros
               </h3>
-              <button 
-                onClick={() => navigate('/ejc/jovens')}
-                className="text-xs font-bold text-zinc-400 hover:text-zinc-900 transition-colors flex items-center gap-1"
-              >
-                Ver todos
-                <ArrowRight size={14} />
-              </button>
+              {role !== 'participante' && (
+                <button 
+                  onClick={() => navigate('/ejc/jovens')}
+                  className="text-xs font-bold text-zinc-400 hover:text-zinc-900 transition-colors flex items-center gap-1"
+                >
+                  Ver todos
+                  <ArrowRight size={14} />
+                </button>
+              )}
             </div>
             
             <div className="flex-1 overflow-x-auto">
@@ -210,7 +221,7 @@ export function EJCDashboard() {
                     <th className="px-6 py-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest">Jovem</th>
                     <th className="px-6 py-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest">Bairro</th>
                     <th className="px-6 py-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest">Data</th>
-                    <th className="px-6 py-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest text-right">Ação</th>
+                    {role !== 'participante' && <th className="px-6 py-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest text-right">Ação</th>}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-zinc-50">
@@ -230,19 +241,21 @@ export function EJCDashboard() {
                           {new Date(jovem.created_at).toLocaleDateString('pt-BR')}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-right">
-                        <button 
-                          onClick={() => navigate(`/ejc/jovens/visualizar/${jovem.id}`)}
-                          className="p-2 hover:bg-zinc-100 rounded-lg text-zinc-400 hover:text-zinc-900 transition-all"
-                        >
-                          <ArrowRight size={16} />
-                        </button>
-                      </td>
+                      {role !== 'participante' && (
+                        <td className="px-6 py-4 text-right">
+                          <button 
+                            onClick={() => navigate(`/ejc/jovens/visualizar/${jovem.id}`)}
+                            className="p-2 hover:bg-zinc-100 rounded-lg text-zinc-400 hover:text-zinc-900 transition-all"
+                          >
+                            <ArrowRight size={16} />
+                          </button>
+                        </td>
+                      )}
                     </tr>
                   ))}
                   {jovens.length === 0 && (
                     <tr>
-                      <td colSpan={4} className="px-6 py-12 text-center text-zinc-400 italic text-sm">
+                      <td colSpan={role === 'participante' ? 3 : 4} className="px-6 py-12 text-center text-zinc-400 italic text-sm">
                         Nenhum jovem cadastrado ainda.
                       </td>
                     </tr>

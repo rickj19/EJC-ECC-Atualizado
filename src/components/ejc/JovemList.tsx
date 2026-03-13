@@ -11,8 +11,11 @@ import { jovemService, JovemFilters as JovemFiltersType } from '../../services/j
 import { JovemFilters, JovemFiltersData } from './JovemFilters';
 import { JovemTable } from './JovemTable';
 
+import { useAuth } from '../../lib/supabase/auth-context';
+
 export function JovemList() {
   const navigate = useNavigate();
+  const { role } = useAuth();
   const [jovens, setJovens] = useState<Jovem[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
@@ -112,13 +115,15 @@ export function JovemList() {
           <p className="text-sm text-zinc-500">Gerencie a ficha de todos os jovens do EJC.</p>
         </div>
         
-        <button
-          onClick={() => navigate('/ejc/jovens/novo')}
-          className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-zinc-900 text-white font-bold hover:bg-zinc-800 transition-all shadow-lg shadow-zinc-900/10 active:scale-95"
-        >
-          <Plus size={20} />
-          Novo Cadastro
-        </button>
+        {role !== 'participante' && (
+          <button
+            onClick={() => navigate('/ejc/jovens/novo')}
+            className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-zinc-900 text-white font-bold hover:bg-zinc-800 transition-all shadow-lg shadow-zinc-900/10 active:scale-95"
+          >
+            <Plus size={20} />
+            Novo Cadastro
+          </button>
+        )}
       </div>
 
       {/* Filtros */}

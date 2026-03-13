@@ -1,6 +1,21 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Users, UserPlus, Calendar, Settings, LogOut, Search, Bell } from 'lucide-react';
+import { 
+  Users, 
+  UserPlus, 
+  Calendar, 
+  Settings, 
+  LogOut, 
+  Search, 
+  Bell,
+  LayoutDashboard,
+  Star,
+  CircleDot,
+  ShieldCheck,
+  FileBarChart,
+  User,
+  Info
+} from 'lucide-react';
 import { useAuth } from '../../lib/supabase/auth-context';
 import { cn } from '../../lib/utils';
 
@@ -11,19 +26,26 @@ interface EJCLayoutProps {
 export function EJCLayout({ children }: EJCLayoutProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, signOut } = useAuth();
+  const { user, profile, role, signOut } = useAuth();
 
   const handleLogout = async () => {
     await signOut();
-    navigate('/');
+    navigate('/login');
   };
 
   const menuItems = [
-    { label: 'Dashboard', path: '/ejc/dashboard', icon: Users },
-    { label: 'Jovens', path: '/ejc/jovens', icon: UserPlus },
-    { label: 'Encontros', path: '/ejc/encontros', icon: Calendar, disabled: true },
-    { label: 'Configurações', path: '/ejc/config', icon: Settings, disabled: true },
+    { label: 'Dashboard', path: '/ejc/dashboard', icon: LayoutDashboard, roles: ['admin', 'equipe'] },
+    { label: 'Jovens', path: '/ejc/jovens', icon: Users, roles: ['admin', 'equipe'] },
+    { label: 'Membros EJC', path: '/ejc/membros', icon: Star, roles: ['admin', 'equipe'], disabled: true },
+    { label: 'Círculos', path: '/ejc/circulos', icon: CircleDot, roles: ['admin', 'equipe'], disabled: true },
+    { label: 'Usuários', path: '/ejc/usuarios', icon: ShieldCheck, roles: ['admin'], disabled: true },
+    { label: 'Relatórios', path: '/ejc/relatorios', icon: FileBarChart, roles: ['admin', 'equipe'], disabled: true },
+    { label: 'Configurações', path: '/ejc/config', icon: Settings, roles: ['admin'], disabled: true },
+    { label: 'Minha área', path: '/ejc/perfil', icon: User, roles: ['participante'], disabled: true },
+    { label: 'Dados básicos', path: '/ejc/dados', icon: Info, roles: ['participante'], disabled: true },
   ];
+
+  const filteredMenuItems = menuItems.filter(item => role && item.roles.includes(role));
 
   return (
     <div className="min-h-screen bg-[#f8f9fa] flex">
@@ -41,30 +63,53 @@ export function EJCLayout({ children }: EJCLayoutProps) {
           </div>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1">
-          {menuItems.map((item) => (
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          {filteredMenuItems.map((item) => (
             <button
               key={item.path}
               disabled={item.disabled}
               onClick={() => navigate(item.path)}
               className={cn(
-                "w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all",
+                "w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all group",
                 (location.pathname === item.path || (item.path !== '/ejc/dashboard' && location.pathname.startsWith(item.path)))
                   ? "bg-emerald-50 text-emerald-700" 
                   : "text-stone-600 hover:bg-stone-50",
                 item.disabled && "opacity-40 cursor-not-allowed"
               )}
             >
-              <item.icon className="w-5 h-5" />
+              <item.icon className={cn(
+                "w-5 h-5 transition-colors",
+                (location.pathname === item.path || (item.path !== '/ejc/dashboard' && location.pathname.startsWith(item.path)))
+                  ? "text-emerald-600"
+                  : "text-stone-400 group-hover:text-stone-600"
+              )} />
               {item.label}
             </button>
           ))}
         </nav>
 
-        <div className="p-4 border-t border-stone-100">
+        <div className="p-4 border-t border-stone-100 space-y-4">
+          <div className="flex items-center gap-3 px-4 py-3 bg-stone-50 rounded-2xl border border-stone-100">
+            <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-xs shrink-0 overflow-hidden">
+              {profile?.avatar_url ? (
+                <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                profile?.full_name?.charAt(0) || user?.email?.charAt(0).toUpperCase()
+              )}
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-bold text-stone-800 truncate">
+                {profile?.full_name || user?.email?.split('@')[0]}
+              </p>
+              <p className="text-[10px] text-stone-500 uppercase font-black tracking-widest truncate">
+                {role || 'Carregando...'}
+              </p>
+            </div>
+          </div>
+          
           <button 
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+            className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-colors font-bold text-sm"
           >
             <LogOut className="w-5 h-5" />
             Sair do Sistema
