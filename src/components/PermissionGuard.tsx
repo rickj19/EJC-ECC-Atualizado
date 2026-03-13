@@ -31,7 +31,7 @@ export function PermissionGuard({ children, permission, fallback }: PermissionGu
           <ShieldAlert className="w-10 h-10 text-red-600" />
         </div>
         <h2 className="text-2xl font-black text-stone-800 uppercase tracking-tight mb-2">
-          Acesso Restrito
+          Acesso Negado
         </h2>
         <p className="text-stone-500 max-w-xs mx-auto">
           Você não tem a permissão específica (<strong>{permission}</strong>) necessária para acessar esta funcionalidade.

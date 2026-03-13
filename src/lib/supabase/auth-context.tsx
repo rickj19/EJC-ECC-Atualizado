@@ -3,15 +3,23 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from './client';
 import { Profile, UserRole } from '../../types/auth';
 
+interface Permissions {
+  can_view_jovens: boolean;
+  can_edit_jovens: boolean;
+  can_create_users: boolean;
+  can_manage_permissions: boolean;
+}
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   profile: Profile | null;
   role: UserRole | null;
+  permissions: Permissions;
   loading: boolean;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
-  hasPermission: (permission: keyof Pick<Profile, 'can_view_jovens' | 'can_edit_jovens' | 'can_create_users' | 'can_manage_permissions'>) => boolean;
+  hasPermission: (permission: keyof Permissions) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,6 +29,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const getPermissions = (p: Profile | null): Permissions => {
+    const isAdmin = p?.role === 'admin';
+    return {
+      can_view_jovens: isAdmin || (p?.can_view_jovens ?? false),
+      can_edit_jovens: isAdmin || (p?.can_edit_jovens ?? false),
+      can_create_users: isAdmin || (p?.can_create_users ?? false),
+      can_manage_permissions: isAdmin || (p?.can_manage_permissions ?? false),
+    };
+  };
+
+  const permissions = getPermissions(profile);
 
   const fetchProfile = async (userId: string) => {
     try {
@@ -51,26 +71,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let mounted = true;
 
-    // Check active sessions
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      if (!mounted) return;
-      
-      setSession(session);
-      const currentUser = session?.user ?? null;
-      setUser(currentUser);
-      
-      if (currentUser) {
-        const p = await fetchProfile(currentUser.id);
-        if (mounted) setProfile(p);
+    const initializeAuth = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error('Error getting session:', error);
+          if (mounted) {
+            setSession(null);
+            setUser(null);
+            setProfile(null);
+          }
+        } else {
+          if (mounted) {
+            setSession(session);
+            const currentUser = session?.user ?? null;
+            setUser(currentUser);
+
+            if (currentUser) {
+              const p = await fetchProfile(currentUser.id);
+              if (mounted) setProfile(p);
+            } else {
+              if (mounted) setProfile(null);
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Unexpected error during auth initialization:', err);
+        if (mounted) {
+          setSession(null);
+          setUser(null);
+          setProfile(null);
+        }
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
       }
-      
-      setLoading(false);
-    });
+    };
+
+    initializeAuth();
 
     // Listen for changes on auth state
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!mounted) return;
 
+      console.log('Auth state changed:', event, session?.user?.email);
+      
       setSession(session);
       const currentUser = session?.user ?? null;
       setUser(currentUser);
@@ -79,10 +125,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const p = await fetchProfile(currentUser.id);
         if (mounted) setProfile(p);
       } else {
-        setProfile(null);
+        if (mounted) setProfile(null);
       }
       
-      setLoading(false);
+      if (mounted) {
+        setLoading(false);
+      }
     });
 
     return () => {
@@ -95,9 +143,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await supabase.auth.signOut();
   };
 
-  const hasPermission = (permission: keyof Pick<Profile, 'can_view_jovens' | 'can_edit_jovens' | 'can_create_users' | 'can_manage_permissions'>) => {
-    if (profile?.role === 'admin') return true;
-    return profile ? !!profile[permission] : false;
+  const hasPermission = (permission: keyof Permissions) => {
+    return permissions[permission];
   };
 
   return (
@@ -106,6 +153,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       session, 
       profile, 
       role: profile?.role ?? null, 
+      permissions,
       loading, 
       signOut,
       refreshProfile,

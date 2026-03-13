@@ -55,7 +55,7 @@ export default function App() {
 
                     {/* Rotas de Usuários */}
                     <Route path="usuarios" element={
-                      <PermissionGuard permission="can_create_users">
+                      <PermissionGuard permission="can_manage_permissions">
                         <UserList />
                       </PermissionGuard>
                     } />
@@ -65,6 +65,11 @@ export default function App() {
                       </PermissionGuard>
                     } />
                     <Route path="usuarios/editar/:id" element={
+                      <PermissionGuard permission="can_manage_permissions">
+                        <UserForm />
+                      </PermissionGuard>
+                    } />
+                    <Route path="usuarios/visualizar/:id" element={
                       <PermissionGuard permission="can_manage_permissions">
                         <UserForm />
                       </PermissionGuard>

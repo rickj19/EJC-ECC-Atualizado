@@ -9,7 +9,7 @@ import {
   CheckCircle2,
   AlertCircle
 } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { supabase } from '../../lib/supabase/client';
 import { Profile, UserRole } from '../../types/auth';
 import { useAuth } from '../../lib/supabase/auth-context';
@@ -18,8 +18,12 @@ import { cn } from '../../lib/utils';
 export function UserForm() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { hasPermission, refreshProfile } = useAuth();
-  const isEditing = !!id;
+  
+  const isViewing = location.pathname.includes('/visualizar/');
+  const isEditing = !!id && !isViewing;
+  const isCreating = !id;
 
   const [loading, setLoading] = useState(isEditing);
   const [saving, setSaving] = useState(false);
@@ -165,10 +169,10 @@ export function UserForm() {
             </div>
             <div>
               <h1 className="text-2xl font-black uppercase tracking-tight">
-                {isEditing ? 'Editar Permissões' : 'Novo Usuário'}
+                {isViewing ? 'Dados do Usuário' : isEditing ? 'Editar Permissões' : 'Novo Usuário'}
               </h1>
               <p className="text-stone-400 text-sm font-medium">
-                {isEditing ? `Alterando acessos de ${formData.email}` : 'Cadastre um novo membro na equipe do sistema.'}
+                {isViewing ? `Visualizando perfil de ${formData.email}` : isEditing ? `Alterando acessos de ${formData.email}` : 'Cadastre um novo membro na equipe do sistema.'}
               </p>
             </div>
           </div>
@@ -182,13 +186,6 @@ export function UserForm() {
             </div>
           )}
 
-          {success && (
-            <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-3 text-emerald-700 animate-in fade-in slide-in-from-top-2">
-              <CheckCircle2 size={20} />
-              <p className="text-sm font-bold">Usuário salvo com sucesso! Redirecionando...</p>
-            </div>
-          )}
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-xs font-black text-stone-400 uppercase tracking-widest ml-1">Nome Completo</label>
@@ -197,9 +194,10 @@ export function UserForm() {
                 <input
                   type="text"
                   required
+                  disabled={isViewing}
                   value={formData.full_name}
                   onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                  className="w-full pl-12 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium"
+                  className="w-full pl-12 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium disabled:opacity-70"
                   placeholder="Ex: João Silva"
                 />
               </div>
@@ -212,16 +210,16 @@ export function UserForm() {
                 <input
                   type="email"
                   required
-                  disabled={isEditing}
+                  disabled={isViewing || isEditing}
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full pl-12 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium disabled:opacity-50"
+                  className="w-full pl-12 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium disabled:opacity-70"
                   placeholder="email@exemplo.com"
                 />
               </div>
             </div>
 
-            {!isEditing && (
+            {isCreating && (
               <div className="space-y-2">
                 <label className="text-xs font-black text-stone-400 uppercase tracking-widest ml-1">Senha Inicial</label>
                 <input
@@ -239,9 +237,10 @@ export function UserForm() {
             <div className="space-y-2">
               <label className="text-xs font-black text-stone-400 uppercase tracking-widest ml-1">Perfil (Role)</label>
               <select
+                disabled={isViewing}
                 value={formData.role}
                 onChange={(e) => setFormData({ ...formData, role: e.target.value as UserRole })}
-                className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium"
+                className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium disabled:opacity-70"
               >
                 <option value="usuario">Usuário Comum</option>
                 <option value="participante">Participante</option>
@@ -259,66 +258,74 @@ export function UserForm() {
                 label="Visualizar Jovens"
                 description="Permite ver a lista e detalhes dos jovens"
                 active={formData.can_view_jovens}
+                disabled={isViewing}
                 onChange={(val) => setFormData({ ...formData, can_view_jovens: val })}
               />
               <PermissionToggle
                 label="Editar Jovens"
                 description="Permite alterar dados e excluir cadastros"
                 active={formData.can_edit_jovens}
+                disabled={isViewing}
                 onChange={(val) => setFormData({ ...formData, can_edit_jovens: val })}
               />
               <PermissionToggle
                 label="Criar Usuários"
                 description="Permite cadastrar novos membros no sistema"
                 active={formData.can_create_users}
+                disabled={isViewing}
                 onChange={(val) => setFormData({ ...formData, can_create_users: val })}
               />
               <PermissionToggle
                 label="Gerenciar Permissões"
                 description="Permite alterar níveis de acesso de outros"
                 active={formData.can_manage_permissions}
+                disabled={isViewing}
                 onChange={(val) => setFormData({ ...formData, can_manage_permissions: val })}
               />
             </div>
           </div>
 
-          <div className="flex justify-end pt-8">
-            <button
-              type="submit"
-              disabled={saving}
-              className="flex items-center gap-2 px-8 py-4 bg-emerald-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-600/20 active:scale-95 disabled:opacity-50"
-            >
-              {saving ? (
-                <>
-                  <Loader2 className="animate-spin" size={20} />
-                  Salvando...
-                </>
-              ) : (
-                <>
-                  <Save size={20} />
-                  Salvar Alterações
-                </>
-              )}
-            </button>
-          </div>
+          {!isViewing && (
+            <div className="flex justify-end pt-8">
+              <button
+                type="submit"
+                disabled={saving}
+                className="flex items-center gap-2 px-8 py-4 bg-emerald-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-600/20 active:scale-95 disabled:opacity-50"
+              >
+                {saving ? (
+                  <>
+                    <Loader2 className="animate-spin" size={20} />
+                    Salvando...
+                  </>
+                ) : (
+                  <>
+                    <Save size={20} />
+                    Salvar Alterações
+                  </>
+                )}
+              </button>
+            </div>
+          )}
         </form>
       </div>
     </div>
   );
 }
 
-function PermissionToggle({ label, description, active, onChange }: { 
+function PermissionToggle({ label, description, active, disabled, onChange }: { 
   label: string, 
   description: string, 
   active: boolean, 
+  disabled?: boolean,
   onChange: (val: boolean) => void 
 }) {
   return (
     <button
       type="button"
+      disabled={disabled}
       onClick={() => onChange(!active)}
       className={cn(
-        "flex items-center justify-between p-4 rounded-2xl border transition-all text-left group",
+        "flex items-center justify-between p-4 rounded-2xl border transition-all text-left group disabled:opacity-50",
         active 
           ? "bg-emerald-50 border-emerald-200 ring-1 ring-emerald-200" 
           : "bg-stone-50 border-stone-200 hover:border-stone-300"

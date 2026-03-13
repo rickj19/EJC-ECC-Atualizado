@@ -12,7 +12,8 @@ import {
   Loader2,
   AlertCircle,
   Check,
-  X
+  X,
+  Eye
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase/client';
@@ -31,6 +32,9 @@ export function UserList() {
     fetchUsers();
   }, []);
 
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const fetchUsers = async () => {
     try {
       setLoading(true);
@@ -45,6 +49,29 @@ export function UserList() {
       console.error('Erro ao buscar usuários:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    if (!deleteId) return;
+    try {
+      setIsDeleting(true);
+      // Nota: No Supabase client-side, você só pode deletar seu próprio usuário auth.
+      // Para deletar outros, precisaria de uma Edge Function com service_role.
+      // Aqui deletamos apenas o perfil para fins de demonstração da UI.
+      const { error } = await supabase
+        .from('profiles')
+        .delete()
+        .eq('id', deleteId);
+
+      if (error) throw error;
+      setUsers(users.filter(u => u.id !== deleteId));
+      setDeleteId(null);
+    } catch (err) {
+      console.error('Erro ao excluir perfil:', err);
+      alert('Erro ao excluir perfil. Em produção, use uma Edge Function para remover o usuário do Auth.');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -67,8 +94,8 @@ export function UserList() {
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-4xl font-black text-stone-900 tracking-tight uppercase">Gerenciamento de Usuários</h1>
-          <p className="text-stone-500 font-medium">Controle quem acessa o sistema e quais são suas permissões.</p>
+          <h1 className="text-4xl font-black text-stone-900 tracking-tight uppercase">Usuários e Permissões</h1>
+          <p className="text-stone-500 font-medium">Gerencie a equipe e os níveis de acesso ao sistema.</p>
         </div>
         
         {hasPermission('can_create_users') && (
@@ -159,6 +186,13 @@ export function UserList() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => navigate(`/ejc/usuarios/visualizar/${user.id}`)}
+                          className="p-2 text-stone-500 hover:text-stone-900 hover:bg-stone-100 rounded-lg transition-all"
+                          title="Visualizar"
+                        >
+                          <Eye size={18} />
+                        </button>
                         {hasPermission('can_manage_permissions') && (
                           <button
                             onClick={() => navigate(`/ejc/usuarios/editar/${user.id}`)}
@@ -166,6 +200,15 @@ export function UserList() {
                             title="Editar Permissões"
                           >
                             <Edit2 size={18} />
+                          </button>
+                        )}
+                        {currentUserRole === 'admin' && (
+                          <button
+                            onClick={() => setDeleteId(user.id)}
+                            className="p-2 text-stone-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                            title="Excluir Usuário"
+                          >
+                            <Trash2 size={18} />
                           </button>
                         )}
                       </div>
@@ -186,6 +229,52 @@ export function UserList() {
           </table>
         </div>
       </div>
+
+      {/* Modal de Confirmação de Exclusão */}
+      {deleteId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl w-full max-w-md p-8 shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="flex flex-col items-center text-center gap-4 mb-8">
+              <div className="p-4 bg-red-50 text-red-600 rounded-2xl">
+                <AlertCircle size={40} />
+              </div>
+              <div>
+                <h3 className="text-2xl font-black text-stone-900 tracking-tight uppercase">Excluir Usuário?</h3>
+                <p className="text-stone-500 mt-2">
+                  Esta ação removerá o perfil do usuário do sistema. O acesso ao Auth deve ser removido manualmente no painel do Supabase.
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <button
+                onClick={() => setDeleteId(null)}
+                disabled={isDeleting}
+                className="w-full sm:w-auto px-8 py-3 text-stone-600 font-bold hover:bg-stone-100 rounded-xl transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleDeleteUser}
+                disabled={isDeleting}
+                className="w-full sm:w-auto px-8 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-red-600/20 disabled:opacity-50"
+              >
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="animate-spin" size={20} />
+                    Excluindo...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 size={20} />
+                    Sim, Excluir
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
