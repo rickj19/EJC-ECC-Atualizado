@@ -100,16 +100,16 @@ export function ImageUploadField({
   };
 
   return (
-    <div className={cn('space-y-2', className)}>
+    <div className={cn('space-y-3', className)}>
       {label && (
-        <label className="text-sm font-medium text-zinc-700 block">
+        <label className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] ml-1 block">
           {label}
         </label>
       )}
 
       <div className="relative">
         {previewUrl ? (
-          <div className="relative group aspect-square w-full max-w-[240px] mx-auto rounded-2xl overflow-hidden border-2 border-zinc-200 bg-zinc-50">
+          <div className="relative group aspect-square w-full max-w-[240px] mx-auto rounded-2xl overflow-hidden border-2 border-church-border bg-stone-50 shadow-inner">
             <img
               src={previewUrl}
               alt="Preview"
@@ -118,11 +118,11 @@ export function ImageUploadField({
             />
             
             {/* Overlay de Ações */}
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+            <div className="absolute inset-0 bg-church-dark/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
               <button
                 type="button"
                 onClick={() => triggerUpload()}
-                className="p-2 bg-white rounded-full text-zinc-900 hover:bg-zinc-100 transition-colors"
+                className="p-3 bg-white rounded-full text-church-dark hover:bg-church-beige-light transition-colors shadow-lg"
                 title="Trocar imagem"
               >
                 <Upload size={20} />
@@ -130,7 +130,7 @@ export function ImageUploadField({
               <button
                 type="button"
                 onClick={handleRemove}
-                className="p-2 bg-red-500 rounded-full text-white hover:bg-red-600 transition-colors"
+                className="p-3 bg-red-500 rounded-full text-white hover:bg-red-600 transition-colors shadow-lg"
                 title="Remover imagem"
               >
                 <X size={20} />
@@ -141,7 +141,7 @@ export function ImageUploadField({
             <button
               type="button"
               onClick={handleRemove}
-              className="absolute top-2 right-2 p-1.5 bg-red-500 rounded-full text-white md:hidden shadow-lg"
+              className="absolute top-3 right-3 p-2 bg-red-500 rounded-full text-white md:hidden shadow-xl"
             >
               <X size={16} />
             </button>
@@ -150,20 +150,20 @@ export function ImageUploadField({
           <div 
             onClick={() => triggerUpload()}
             className={cn(
-              "aspect-square w-full max-w-[240px] mx-auto rounded-2xl border-2 border-dashed flex flex-col items-center justify-center gap-3 cursor-pointer transition-all",
-              error ? "border-red-300 bg-red-50 text-red-500" : "border-zinc-300 bg-zinc-50 text-zinc-500 hover:border-zinc-400 hover:bg-zinc-100"
+              "aspect-square w-full max-w-[240px] mx-auto rounded-2xl border-2 border-dashed flex flex-col items-center justify-center gap-4 cursor-pointer transition-all",
+              error ? "border-red-300 bg-red-50/50 text-red-500" : "border-church-border bg-stone-50/50 text-stone-400 hover:border-church-gold hover:bg-white hover:shadow-xl hover:shadow-church-gold/5"
             )}
           >
             {uploading ? (
-              <Loader2 className="animate-spin" size={32} />
+              <Loader2 className="animate-spin text-church-gold" size={40} />
             ) : (
               <>
-                <div className="p-3 bg-white rounded-full shadow-sm">
-                  <ImageIcon size={32} />
+                <div className="p-4 bg-white rounded-full shadow-sm border border-church-border">
+                  <ImageIcon size={32} className="text-church-gold" />
                 </div>
-                <div className="text-center px-4">
-                  <p className="text-sm font-semibold">Toque para enviar</p>
-                  <p className="text-xs opacity-70">JPG ou PNG até 5MB</p>
+                <div className="text-center px-6">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-church-dark">Anexar Fotografia</p>
+                  <p className="text-[9px] font-bold text-stone-400 uppercase tracking-wider mt-1">Formatos JPG/PNG até 5MB</p>
                 </div>
               </>
             )}
@@ -172,31 +172,31 @@ export function ImageUploadField({
 
         {/* Botões Rápidos (Apenas se não houver imagem ou estiver enviando) */}
         {!previewUrl && !uploading && (
-          <div className="flex justify-center gap-4 mt-4">
+          <div className="flex justify-center gap-4 mt-6">
             <button
               type="button"
               onClick={() => triggerUpload(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-zinc-900 text-white rounded-full text-sm font-medium hover:bg-zinc-800 transition-colors shadow-sm"
+              className="flex items-center gap-3 px-6 py-2.5 bg-church-dark text-church-beige-light rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-church-brown transition-all shadow-md active:scale-95"
             >
-              <Camera size={18} />
+              <Camera size={16} />
               Câmera
             </button>
             <button
               type="button"
               onClick={() => triggerUpload(false)}
-              className="flex items-center gap-2 px-4 py-2 bg-white border border-zinc-200 text-zinc-700 rounded-full text-sm font-medium hover:bg-zinc-50 transition-colors shadow-sm"
+              className="flex items-center gap-3 px-6 py-2.5 bg-white border border-church-border text-church-dark rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-stone-50 transition-all shadow-sm active:scale-95"
             >
-              <Upload size={18} />
-              Galeria
+              <Upload size={16} />
+              Arquivo
             </button>
           </div>
         )}
 
         {uploading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/60 rounded-2xl backdrop-blur-[1px]">
-            <div className="flex flex-col items-center gap-2">
-              <Loader2 className="animate-spin text-zinc-900" size={24} />
-              <span className="text-xs font-medium text-zinc-900">Enviando...</span>
+          <div className="absolute inset-0 flex items-center justify-center bg-white/80 rounded-2xl backdrop-blur-sm">
+            <div className="flex flex-col items-center gap-3">
+              <Loader2 className="animate-spin text-church-gold" size={32} />
+              <span className="text-[10px] font-black text-church-dark uppercase tracking-widest">Processando...</span>
             </div>
           </div>
         )}
@@ -211,7 +211,7 @@ export function ImageUploadField({
       />
 
       {error && (
-        <p className="text-xs text-red-500 font-medium text-center mt-1">
+        <p className="text-[10px] font-bold text-red-500 uppercase tracking-wider text-center mt-2">
           {error}
         </p>
       )}

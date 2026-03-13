@@ -4,4 +4,23 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Playfair Display", serif;
+  
+  --color-church-brown: #6B4A2B;
+  --color-church-dark: #3E2A1B;
+  --color-church-beige: #E7D8C5;
+  --color-church-bg: #F5EEE5;
+  --color-church-gold: #C89A55;
+  --color-church-green: #1E8F63;
+  --color-church-text: #2B2118;
+  --color-church-border: #D8C8B6;
+}
+
+@layer base {
+  body {
+    @apply bg-church-bg text-church-text font-sans;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
 }

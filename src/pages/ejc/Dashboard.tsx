@@ -11,22 +11,22 @@ export default function Dashboard() {
   
   const getWelcomeMessage = () => {
     switch (role) {
-      case 'admin': return 'Bem-vindo, Administrador!';
-      case 'equipe': return 'Bem-vindo, Equipe de Apoio!';
-      case 'participante': return 'Bem-vindo, Participante!';
-      default: return 'Bem-vindo!';
+      case 'admin': return 'Saudações, Administrador do Sistema';
+      case 'equipe': return 'Saudações, Membro da Equipe de Apoio';
+      case 'participante': return 'Saudações, Participante Registrado';
+      default: return 'Saudações!';
     }
   };
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-2xl font-black text-stone-800 uppercase tracking-tight">
+    <div className="max-w-7xl mx-auto animate-in fade-in duration-700">
+      <div className="mb-10">
+        <h1 className="text-3xl font-serif font-bold text-church-dark">
           {getWelcomeMessage()}
         </h1>
-        <p className="text-stone-500">
-          {profile?.nome ? `Olá, ${profile.nome}. ` : ''}
-          Aqui está o resumo das atividades do EJC hoje.
+        <p className="text-stone-500 mt-1">
+          {profile?.nome ? `Oficial ${profile.nome}, ` : ''}
+          acompanhe o resumo das atividades administrativas da comunidade.
         </p>
       </div>
 

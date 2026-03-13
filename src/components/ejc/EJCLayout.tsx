@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../lib/supabase/auth-context';
 import { cn } from '../../lib/utils';
+import { motion } from 'framer-motion';
 
 interface EJCLayoutProps {
   children: React.ReactNode;
@@ -35,10 +36,10 @@ export function EJCLayout({ children }: EJCLayoutProps) {
 
   const menuItems = [
     { label: 'Dashboard', path: '/ejc/dashboard', icon: LayoutDashboard, roles: ['admin', 'equipe'] },
-    { label: 'Jovens', path: '/ejc/jovens', icon: Users, roles: ['admin', 'equipe', 'usuario'], permission: 'can_view_jovens' },
+    { label: 'Arquivo de Jovens', path: '/ejc/jovens', icon: Users, roles: ['admin', 'equipe', 'usuario'], permission: 'can_view_jovens' },
     { label: 'Membros EJC', path: '/ejc/membros', icon: Star, roles: ['admin', 'equipe'], disabled: true },
     { label: 'Círculos', path: '/ejc/circulos', icon: CircleDot, roles: ['admin', 'equipe'], disabled: true },
-    { label: 'Usuários', path: '/ejc/usuarios', icon: ShieldCheck, roles: ['admin'], permission: 'can_create_users' },
+    { label: 'Chancelaria', path: '/ejc/usuarios', icon: ShieldCheck, roles: ['admin'], permission: 'can_create_users' },
     { label: 'Relatórios', path: '/ejc/relatorios', icon: FileBarChart, roles: ['admin', 'equipe'], disabled: true },
     { label: 'Configurações', path: '/ejc/config', icon: Settings, roles: ['admin'], disabled: true },
     { label: 'Minha área', path: '/ejc/perfil', icon: User, roles: ['participante'], disabled: true },
@@ -58,49 +59,55 @@ export function EJCLayout({ children }: EJCLayoutProps) {
   });
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] flex">
+    <div className="min-h-screen bg-church-bg flex">
       {/* Sidebar - Hidden on print */}
-      <aside className="w-64 bg-white border-r border-stone-200 flex flex-col hidden md:flex sticky top-0 h-screen print:hidden">
-        <div className="p-6 border-b border-stone-100">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white font-bold">
-              E
+      <aside className="w-72 bg-church-dark text-white flex flex-col hidden md:flex sticky top-0 h-screen print:hidden shadow-2xl z-30">
+        <div className="p-8 border-b border-white/10">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-church-brown rounded-xl flex items-center justify-center text-church-gold shadow-inner border border-white/5">
+              <Star className="w-7 h-7" />
             </div>
             <div>
-              <h2 className="font-bold text-stone-800 leading-tight">EJC Brasil</h2>
-              <p className="text-xs text-stone-500">São Francisco</p>
+              <h2 className="font-serif font-bold text-lg leading-tight text-church-beige">Sistema EJC</h2>
+              <p className="text-[10px] text-church-gold uppercase font-black tracking-[0.2em]">Gestão Pastoral</p>
             </div>
           </div>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+        <nav className="flex-1 p-6 space-y-2 overflow-y-auto">
           {filteredMenuItems.map((item) => (
             <button
               key={item.path}
               disabled={item.disabled}
               onClick={() => navigate(item.path)}
               className={cn(
-                "w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all group",
+                "w-full flex items-center gap-4 px-5 py-3.5 rounded-xl font-medium transition-all group relative",
                 (location.pathname === item.path || (item.path !== '/ejc/dashboard' && location.pathname.startsWith(item.path)))
-                  ? "bg-emerald-50 text-emerald-700" 
-                  : "text-stone-600 hover:bg-stone-50",
-                item.disabled && "opacity-40 cursor-not-allowed"
+                  ? "bg-church-brown text-white shadow-lg" 
+                  : "text-church-beige/60 hover:text-white hover:bg-white/5",
+                item.disabled && "opacity-30 cursor-not-allowed"
               )}
             >
+              {(location.pathname === item.path || (item.path !== '/ejc/dashboard' && location.pathname.startsWith(item.path))) && (
+                <motion.div 
+                  layoutId="active-nav"
+                  className="absolute left-0 w-1 h-6 bg-church-gold rounded-r-full"
+                />
+              )}
               <item.icon className={cn(
                 "w-5 h-5 transition-colors",
                 (location.pathname === item.path || (item.path !== '/ejc/dashboard' && location.pathname.startsWith(item.path)))
-                  ? "text-emerald-600"
-                  : "text-stone-400 group-hover:text-stone-600"
+                  ? "text-church-gold"
+                  : "text-church-beige/40 group-hover:text-church-beige"
               )} />
-              {item.label}
+              <span className="text-sm tracking-wide">{item.label}</span>
             </button>
           ))}
         </nav>
 
-        <div className="p-4 border-t border-stone-100 space-y-4">
-          <div className="flex items-center gap-3 px-4 py-3 bg-stone-50 rounded-2xl border border-stone-100">
-            <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-xs shrink-0 overflow-hidden">
+        <div className="p-6 border-t border-white/10 space-y-4 bg-black/10">
+          <div className="flex items-center gap-4 px-4 py-3 bg-white/5 rounded-2xl border border-white/5">
+            <div className="w-10 h-10 rounded-full bg-church-brown flex items-center justify-center text-church-gold font-bold text-xs shrink-0 overflow-hidden border border-white/10">
               {profile?.avatar_url ? (
                 <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
               ) : (
@@ -108,10 +115,10 @@ export function EJCLayout({ children }: EJCLayoutProps) {
               )}
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-bold text-stone-800 truncate">
+              <p className="text-sm font-bold text-church-beige truncate">
                 {profile?.nome || user?.email?.split('@')[0]}
               </p>
-              <p className="text-[10px] text-stone-500 uppercase font-black tracking-widest truncate">
+              <p className="text-[9px] text-church-gold uppercase font-black tracking-widest truncate">
                 {role || 'Visitante'}
               </p>
             </div>
@@ -119,9 +126,9 @@ export function EJCLayout({ children }: EJCLayoutProps) {
           
           <button 
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-colors font-bold text-sm"
+            className="w-full flex items-center gap-3 px-5 py-3 text-church-beige/50 hover:text-red-400 hover:bg-red-400/10 rounded-xl transition-all font-bold text-xs uppercase tracking-widest"
           >
-            <LogOut className="w-5 h-5" />
+            <LogOut className="w-4 h-4" />
             Sair do Sistema
           </button>
         </div>
@@ -130,33 +137,49 @@ export function EJCLayout({ children }: EJCLayoutProps) {
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 print:block">
         {/* Header - Hidden on print */}
-        <header className="h-20 bg-white border-b border-stone-200 px-8 flex items-center justify-between sticky top-0 z-10 print:hidden">
-          <div className="relative w-96 max-w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
-            <input 
-              type="text" 
-              placeholder="Buscar jovens, equipes..."
-              className="w-full pl-10 pr-4 py-2.5 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
-            />
+        <header className="h-24 bg-white border-b border-church-border px-10 flex items-center justify-between sticky top-0 z-20 print:hidden shadow-sm">
+          <div className="flex items-center gap-6">
+            <div className="hidden lg:block">
+              <h1 className="text-xl font-serif font-bold text-church-dark">Paróquia São Francisco de Assis</h1>
+              <p className="text-[10px] text-church-gold uppercase font-black tracking-[0.2em]">Secretaria Paroquial</p>
+            </div>
+            <div className="h-10 w-px bg-church-border hidden lg:block" />
+            <div className="relative w-80 max-w-full">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+              <input 
+                type="text" 
+                placeholder="Pesquisar no sistema..."
+                className="w-full pl-11 pr-4 py-3 bg-church-bg/50 border border-church-border rounded-xl focus:outline-none focus:ring-4 focus:ring-church-brown/5 focus:border-church-brown transition-all text-sm"
+              />
+            </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="text-right hidden sm:block">
-              <p className="text-sm font-bold text-stone-800">{profile?.nome || user?.email?.split('@')[0]}</p>
-              <p className="text-[10px] text-stone-500 uppercase tracking-wider">{role || 'Visitante'}</p>
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3">
+              <button className="p-3 text-stone-400 hover:text-church-brown hover:bg-church-bg rounded-xl transition-all relative">
+                <Bell className="w-5 h-5" />
+                <span className="absolute top-3 right-3 w-2 h-2 bg-church-gold rounded-full border-2 border-white"></span>
+              </button>
             </div>
-            <button className="p-2.5 text-stone-500 hover:bg-stone-50 rounded-full transition-colors relative">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-            </button>
-            <div className="w-10 h-10 bg-stone-100 rounded-full border border-stone-200 overflow-hidden">
-              <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email}`} alt="Avatar" />
+            <div className="h-10 w-px bg-church-border" />
+            <div className="flex items-center gap-4">
+              <div className="text-right hidden sm:block">
+                <p className="text-sm font-bold text-church-dark leading-none mb-1">{profile?.nome || user?.email?.split('@')[0]}</p>
+                <p className="text-[10px] text-church-gold font-black uppercase tracking-widest">{role || 'Visitante'}</p>
+              </div>
+              <div className="w-12 h-12 bg-church-beige rounded-2xl border border-church-border overflow-hidden shadow-sm p-0.5">
+                <img 
+                  src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email}`} 
+                  alt="Avatar" 
+                  className="w-full h-full rounded-[14px]"
+                />
+              </div>
             </div>
           </div>
         </header>
 
         {/* Content */}
-        <div className="p-4 md:p-8 print:p-0 print:m-0">
+        <div className="p-8 md:p-12 print:p-0 print:m-0 max-w-7xl mx-auto w-full">
           {children}
         </div>
       </main>

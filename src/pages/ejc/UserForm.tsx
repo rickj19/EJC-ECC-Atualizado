@@ -160,151 +160,154 @@ export function UserForm() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 gap-4">
-        <Loader2 className="animate-spin text-emerald-600" size={40} />
-        <p className="text-stone-500 font-medium">Carregando dados do usuário...</p>
+      <div className="flex flex-col items-center justify-center py-24 gap-4">
+        <Loader2 className="animate-spin text-church-gold" size={40} />
+        <p className="text-[10px] font-black uppercase tracking-widest text-stone-400">Consultando Arquivos do Oficial...</p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8 pb-20">
+    <div className="max-w-3xl mx-auto space-y-10 pb-24 animate-in fade-in duration-700">
       <div className="flex items-center justify-between">
         <button
           onClick={() => navigate('/ejc/usuarios')}
-          className="flex items-center gap-2 text-stone-500 hover:text-stone-900 transition-colors font-medium"
+          className="flex items-center gap-3 text-stone-400 hover:text-church-dark transition-all font-black uppercase tracking-widest text-[10px]"
         >
-          <ArrowLeft size={20} />
-          Voltar para Lista
+          <ArrowLeft size={16} />
+          Retornar à Chancelaria
         </button>
       </div>
 
-      <div className="bg-white rounded-3xl border border-stone-100 shadow-xl overflow-hidden">
-        <div className="p-8 bg-stone-900 text-white">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center">
-              <Shield className="text-emerald-400" size={24} />
+      <div className="bg-white rounded-3xl border border-church-border shadow-2xl overflow-hidden">
+        <div className="p-10 bg-church-dark text-white">
+          <div className="flex items-center gap-6">
+            <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 shadow-inner">
+              <Shield className="text-church-gold" size={32} />
             </div>
             <div>
-              <h1 className="text-2xl font-black uppercase tracking-tight">
-                {isViewing ? 'Dados do Usuário' : isEditing ? 'Editar Permissões' : 'Novo Usuário'}
+              <h1 className="text-3xl font-serif font-bold">
+                {isViewing ? 'Registro de Oficial' : isEditing ? 'Retificação de Atribuições' : 'Nomeação de Novo Oficial'}
               </h1>
-              <p className="text-stone-400 text-sm font-medium">
-                {isViewing ? `Visualizando perfil de ${formData.email}` : isEditing ? `Alterando acessos de ${formData.email}` : 'Cadastre um novo membro na equipe do sistema.'}
+              <p className="text-stone-400 text-sm mt-1 font-medium italic opacity-80">
+                {isViewing ? `Visualizando prontuário administrativo de ${formData.email}` : isEditing ? `Ajustando níveis de autoridade de ${formData.email}` : 'Iniciando processo de nomeação para a equipe administrativa.'}
               </p>
             </div>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-8 space-y-8">
+        <form onSubmit={handleSubmit} className="p-10 space-y-10">
           {error && (
-            <div className="p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-3 text-red-700 animate-in fade-in slide-in-from-top-2">
-              <AlertCircle size={20} />
+            <div className="p-5 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-4 text-red-700 animate-in fade-in slide-in-from-top-2">
+              <AlertCircle size={24} />
               <p className="text-sm font-bold">{error}</p>
             </div>
           )}
 
           {success && (
-            <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-3 text-emerald-700 animate-in fade-in slide-in-from-top-2">
-              <CheckCircle2 size={20} />
+            <div className="p-5 bg-church-green/10 border border-church-green/20 rounded-2xl flex items-center gap-4 text-church-green animate-in fade-in slide-in-from-top-2">
+              <CheckCircle2 size={24} />
               <p className="text-sm font-bold">
-                {isEditing ? 'Usuário atualizado com sucesso!' : 'Usuário criado com sucesso! Redirecionando...'}
+                {isEditing ? 'Registro retificado com sucesso no sistema.' : 'Novo oficial nomeado com sucesso. Redirecionando aos arquivos...'}
               </p>
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="text-xs font-black text-stone-400 uppercase tracking-widest ml-1">Nome Completo</label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-3">
+              <label className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] ml-1">Nome Completo do Oficial</label>
               <div className="relative">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" size={18} />
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-300" size={18} />
                 <input
                   type="text"
                   required
                   disabled={isViewing}
                   value={formData.nome}
                   onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-                  className="w-full pl-12 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium disabled:opacity-70"
-                  placeholder="Ex: João Silva"
+                  className="w-full pl-12 pr-4 py-4 bg-stone-50/50 border border-church-border rounded-xl focus:outline-none focus:ring-2 focus:ring-church-gold/20 focus:border-church-gold transition-all font-medium text-church-dark placeholder:text-stone-300 disabled:opacity-70"
+                  placeholder="Ex: Sr. João da Silva"
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-xs font-black text-stone-400 uppercase tracking-widest ml-1">Email</label>
+            <div className="space-y-3">
+              <label className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] ml-1">Endereço Eletrônico (ID)</label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" size={18} />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-300" size={18} />
                 <input
                   type="email"
                   required
                   disabled={isViewing || isEditing}
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full pl-12 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium disabled:opacity-70"
-                  placeholder="email@exemplo.com"
+                  className="w-full pl-12 pr-4 py-4 bg-stone-50/50 border border-church-border rounded-xl focus:outline-none focus:ring-2 focus:ring-church-gold/20 focus:border-church-gold transition-all font-medium text-church-dark placeholder:text-stone-300 disabled:opacity-70"
+                  placeholder="oficial@paroquia.org"
                 />
               </div>
             </div>
 
             {isCreating && (
-              <div className="space-y-2">
-                <label className="text-xs font-black text-stone-400 uppercase tracking-widest ml-1">Senha Inicial</label>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] ml-1">Senha de Acesso Inicial</label>
                 <input
                   type="password"
                   required
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium"
+                  className="w-full px-5 py-4 bg-stone-50/50 border border-church-border rounded-xl focus:outline-none focus:ring-2 focus:ring-church-gold/20 focus:border-church-gold transition-all font-medium text-church-dark placeholder:text-stone-300"
                   placeholder="Mínimo 6 caracteres"
                   minLength={6}
                 />
               </div>
             )}
 
-            <div className="space-y-2">
-              <label className="text-xs font-black text-stone-400 uppercase tracking-widest ml-1">Perfil (Role)</label>
+            <div className="space-y-3">
+              <label className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] ml-1">Função Hierárquica (Role)</label>
               <select
                 disabled={isViewing}
                 value={formData.role}
                 onChange={(e) => setFormData({ ...formData, role: e.target.value as UserRole })}
-                className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium disabled:opacity-70"
+                className="w-full px-5 py-4 bg-stone-50/50 border border-church-border rounded-xl focus:outline-none focus:ring-2 focus:ring-church-gold/20 focus:border-church-gold transition-all font-medium text-church-dark disabled:opacity-70 appearance-none"
               >
-                <option value="usuario">Usuário Comum</option>
-                <option value="participante">Participante</option>
-                <option value="equipe">Equipe</option>
-                <option value="admin">Administrador</option>
+                <option value="usuario">Colaborador Comum</option>
+                <option value="participante">Participante Registrado</option>
+                <option value="equipe">Membro da Equipe</option>
+                <option value="admin">Administrador / Chanceler</option>
               </select>
             </div>
           </div>
 
-          <div className="space-y-4 pt-6 border-t border-stone-100">
-            <h3 className="text-sm font-black text-stone-900 uppercase tracking-widest">Permissões Específicas</h3>
+          <div className="space-y-6 pt-10 border-t border-church-border">
+            <div className="flex items-center gap-3">
+              <Shield className="text-church-gold" size={18} />
+              <h3 className="text-[11px] font-black text-church-dark uppercase tracking-[0.2em]">Atribuições e Autoridades Administrativas</h3>
+            </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <PermissionToggle
-                label="Visualizar Jovens"
-                description="Permite ver a lista e detalhes dos jovens"
+                label="Consulta de Registros"
+                description="Autoriza a visualização do arquivo de jovens"
                 active={formData.can_view_jovens}
                 disabled={isViewing}
                 onChange={(val) => setFormData({ ...formData, can_view_jovens: val })}
               />
               <PermissionToggle
-                label="Editar Jovens"
-                description="Permite alterar dados e excluir cadastros"
+                label="Retificação de Dados"
+                description="Autoriza a alteração e exclusão de cadastros"
                 active={formData.can_edit_jovens}
                 disabled={isViewing}
                 onChange={(val) => setFormData({ ...formData, can_edit_jovens: val })}
               />
               <PermissionToggle
-                label="Criar Usuários"
-                description="Permite cadastrar novos membros no sistema"
+                label="Nomeação de Oficiais"
+                description="Autoriza o cadastro de novos membros na equipe"
                 active={formData.can_create_users}
                 disabled={isViewing}
                 onChange={(val) => setFormData({ ...formData, can_create_users: val })}
               />
               <PermissionToggle
-                label="Gerenciar Permissões"
-                description="Permite alterar níveis de acesso de outros"
+                label="Chancelaria de Acessos"
+                description="Autoriza a gestão de permissões de outros oficiais"
                 active={formData.can_manage_permissions}
                 disabled={isViewing}
                 onChange={(val) => setFormData({ ...formData, can_manage_permissions: val })}
@@ -313,21 +316,21 @@ export function UserForm() {
           </div>
 
           {!isViewing && (
-            <div className="flex justify-end pt-8">
+            <div className="flex justify-end pt-10">
               <button
                 type="submit"
                 disabled={saving}
-                className="flex items-center gap-2 px-8 py-4 bg-emerald-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-600/20 active:scale-95 disabled:opacity-50"
+                className="flex items-center gap-3 px-12 py-4 bg-church-brown text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-xl hover:bg-church-dark transition-all shadow-2xl shadow-church-brown/20 active:scale-95 disabled:opacity-50"
               >
                 {saving ? (
                   <>
-                    <Loader2 className="animate-spin" size={20} />
-                    Salvando...
+                    <Loader2 className="animate-spin" size={18} />
+                    Processando...
                   </>
                 ) : (
                   <>
-                    <Save size={20} />
-                    Salvar Alterações
+                    <Save size={18} />
+                    Confirmar Registro
                   </>
                 )}
               </button>
@@ -352,27 +355,27 @@ function PermissionToggle({ label, description, active, disabled, onChange }: {
       disabled={disabled}
       onClick={() => onChange(!active)}
       className={cn(
-        "flex items-center justify-between p-4 rounded-2xl border transition-all text-left group disabled:opacity-50",
+        "flex items-center justify-between p-5 rounded-2xl border transition-all text-left group disabled:opacity-50",
         active 
-          ? "bg-emerald-50 border-emerald-200 ring-1 ring-emerald-200" 
-          : "bg-stone-50 border-stone-200 hover:border-stone-300"
+          ? "bg-church-beige-light/30 border-church-gold/30 ring-1 ring-church-gold/20" 
+          : "bg-stone-50/50 border-church-border hover:border-church-gold/30"
       )}
     >
       <div className="pr-4">
-        <p className={cn("text-sm font-bold transition-colors", active ? "text-emerald-900" : "text-stone-700")}>
+        <p className={cn("text-xs font-bold uppercase tracking-wider transition-colors", active ? "text-church-dark" : "text-stone-500")}>
           {label}
         </p>
-        <p className="text-[10px] text-stone-500 font-medium leading-tight mt-0.5">
+        <p className="text-[9px] text-stone-400 font-medium leading-tight mt-1 uppercase tracking-wide">
           {description}
         </p>
       </div>
       <div className={cn(
-        "w-10 h-6 rounded-full relative transition-colors shrink-0",
-        active ? "bg-emerald-500" : "bg-stone-300"
+        "w-12 h-7 rounded-full relative transition-colors shrink-0 border border-transparent",
+        active ? "bg-church-green" : "bg-stone-200"
       )}>
         <div className={cn(
-          "absolute top-1 w-4 h-4 bg-white rounded-full transition-all shadow-sm",
-          active ? "left-5" : "left-1"
+          "absolute top-1 w-4.5 h-4.5 bg-white rounded-full transition-all shadow-md",
+          active ? "left-6" : "left-1"
         )} />
       </div>
     </button>

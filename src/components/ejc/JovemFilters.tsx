@@ -46,101 +46,102 @@ export function JovemFilters({
     <div className="space-y-4">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={20} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" size={18} />
           <input
             type="text"
-            placeholder="Buscar por nome ou apelido..."
+            placeholder="Pesquisar por nome ou apelido..."
             value={filters.searchTerm}
             onChange={(e) => handleChange('searchTerm', e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-zinc-200 focus:ring-2 focus:ring-zinc-900 outline-none transition-all"
+            className="w-full pl-12 pr-4 py-3 rounded-xl border border-church-border focus:ring-2 focus:ring-church-brown/20 focus:border-church-brown outline-none transition-all bg-white/50 text-sm font-medium"
           />
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <button
             onClick={() => setShowFilters(!showFilters)}
             className={cn(
-              "flex items-center gap-2 px-4 py-2.5 rounded-xl border font-medium transition-all",
+              "flex items-center gap-3 px-6 py-3 rounded-xl border font-black uppercase tracking-widest text-[10px] transition-all",
               showFilters || hasActiveFilters
-                ? "bg-zinc-900 border-zinc-900 text-white" 
-                : "bg-white border-zinc-200 text-zinc-700 hover:bg-zinc-50"
+                ? "bg-church-dark border-church-dark text-white shadow-lg shadow-church-dark/20" 
+                : "bg-white border-church-border text-stone-600 hover:bg-stone-50"
             )}
           >
-            <Filter size={18} />
-            Filtros
+            <Filter size={16} />
+            Filtros Avançados
             {hasActiveFilters && (
-              <span className="ml-1 w-5 h-5 bg-emerald-500 text-white text-[10px] rounded-full flex items-center justify-center">
-                !
-              </span>
+              <span className="ml-1 w-2 h-2 bg-church-gold rounded-full animate-pulse" />
             )}
-            <ChevronDown size={16} className={cn("transition-transform", showFilters && "rotate-180")} />
+            <ChevronDown size={14} className={cn("transition-transform ml-1", showFilters && "rotate-180")} />
           </button>
           
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="text-zinc-400 hover:text-zinc-600 p-2 transition-colors"
+              className="text-stone-400 hover:text-red-600 p-2 transition-colors flex items-center gap-2 text-[10px] font-black uppercase tracking-widest"
               title="Limpar filtros"
             >
-              <X size={20} />
+              <X size={16} />
+              Limpar
             </button>
           )}
         </div>
       </div>
 
       {showFilters && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-6 bg-white rounded-2xl border border-zinc-100 shadow-sm animate-in slide-in-from-top-2 duration-200">
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Bairro</label>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8 bg-white rounded-2xl border border-church-border shadow-xl animate-in slide-in-from-top-4 duration-300">
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">Bairro / Localidade</label>
             <select
               value={filters.bairro}
               onChange={(e) => handleChange('bairro', e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-zinc-200 outline-none focus:ring-2 focus:ring-zinc-900 bg-white"
+              className="w-full px-4 py-2.5 rounded-lg border border-church-border outline-none focus:ring-2 focus:ring-church-brown/20 focus:border-church-brown bg-stone-50 text-sm font-medium text-church-dark"
             >
-              <option value="">Todos os bairros</option>
+              <option value="">Todas as localidades</option>
               {bairros.map(b => <option key={b} value={b}>{b}</option>)}
             </select>
           </div>
 
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Sacramento</label>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">Sacramento</label>
             <select
               value={filters.sacramento}
               onChange={(e) => handleChange('sacramento', e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-zinc-200 outline-none focus:ring-2 focus:ring-zinc-900 bg-white"
+              className="w-full px-4 py-2.5 rounded-lg border border-church-border outline-none focus:ring-2 focus:ring-church-brown/20 focus:border-church-brown bg-stone-50 text-sm font-medium text-church-dark"
             >
-              <option value="">Todos</option>
+              <option value="">Todos os sacramentos</option>
               <option value="Batismo">Batismo</option>
               <option value="Eucaristia">Eucaristia</option>
               <option value="Crisma">Crisma</option>
             </select>
           </div>
 
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Vivenciou EJC</label>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">Vínculo EJC</label>
             <select
               value={String(filters.vivenciou_ejc)}
               onChange={(e) => {
                 const val = e.target.value;
                 handleChange('vivenciou_ejc', val === 'all' ? 'all' : val === 'true');
               }}
-              className="w-full px-3 py-2 rounded-lg border border-zinc-200 outline-none focus:ring-2 focus:ring-zinc-900 bg-white"
+              className="w-full px-4 py-2.5 rounded-lg border border-church-border outline-none focus:ring-2 focus:ring-church-brown/20 focus:border-church-brown bg-stone-50 text-sm font-medium text-church-dark"
             >
-              <option value="all">Todos</option>
-              <option value="true">Sim</option>
-              <option value="false">Não</option>
+              <option value="all">Todos os vínculos</option>
+              <option value="true">Vivenciou EJC</option>
+              <option value="false">Não vivenciou</option>
             </select>
           </div>
 
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Pastoral</label>
-            <input
-              type="text"
-              placeholder="Qual pastoral?"
-              value={filters.pastoral}
-              onChange={(e) => handleChange('pastoral', e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-zinc-200 outline-none focus:ring-2 focus:ring-zinc-900"
-            />
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">Pastoral / Movimento</label>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Ex: Coroinhas..."
+                value={filters.pastoral}
+                onChange={(e) => handleChange('pastoral', e.target.value)}
+                className="w-full px-4 py-2.5 rounded-lg border border-church-border outline-none focus:ring-2 focus:ring-church-brown/20 focus:border-church-brown bg-stone-50 text-sm font-medium text-church-dark"
+              />
+            </div>
           </div>
         </div>
       )}

@@ -109,19 +109,19 @@ export function JovemList() {
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div>
-          <h1 className="text-2xl font-black text-zinc-900 tracking-tight uppercase">Jovens Cadastrados</h1>
-          <p className="text-sm text-zinc-500">Gerencie a ficha de todos os jovens do EJC.</p>
+          <h1 className="text-3xl font-serif font-bold text-church-dark">Arquivo de Jovens</h1>
+          <p className="text-sm text-stone-500 mt-1">Gestão administrativa dos registros da comunidade.</p>
         </div>
         
         {hasPermission('can_edit_jovens') && (
           <button
             onClick={() => navigate('/ejc/jovens/novo')}
-            className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-zinc-900 text-white font-bold hover:bg-zinc-800 transition-all shadow-lg shadow-zinc-900/10 active:scale-95"
+            className="flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-church-brown text-white font-black uppercase tracking-widest hover:bg-church-dark transition-all shadow-xl shadow-church-brown/20 active:scale-[0.98]"
           >
             <Plus size={20} />
-            Novo Cadastro
+            Novo Registro
           </button>
         )}
       </div>
@@ -137,11 +137,11 @@ export function JovemList() {
 
       {/* Tabela ou Loading */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-32 gap-4 bg-white rounded-3xl border border-zinc-100 shadow-sm">
-          <Loader2 className="animate-spin text-zinc-900" size={48} />
+        <div className="flex flex-col items-center justify-center py-32 gap-6 bg-white rounded-2xl border border-church-border shadow-sm">
+          <Loader2 className="animate-spin text-church-brown" size={48} />
           <div className="text-center">
-            <p className="text-zinc-900 font-bold">Buscando jovens...</p>
-            <p className="text-zinc-400 text-xs">Isso pode levar alguns segundos.</p>
+            <p className="text-church-dark font-serif text-xl font-bold">Consultando Arquivos</p>
+            <p className="text-stone-400 text-xs uppercase tracking-widest font-black mt-2">Aguarde um momento...</p>
           </div>
         </div>
       ) : (
@@ -162,41 +162,41 @@ export function JovemList() {
 
       {/* Modal de Confirmação de Exclusão */}
       {deleteId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl w-full max-w-md p-8 shadow-2xl animate-in zoom-in-95 duration-200">
-            <div className="flex flex-col items-center text-center gap-4 mb-8">
-              <div className="p-4 bg-red-50 text-red-600 rounded-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-church-dark/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl w-full max-w-md p-10 shadow-2xl animate-in zoom-in-95 duration-200 border border-church-border">
+            <div className="flex flex-col items-center text-center gap-6 mb-10">
+              <div className="w-20 h-20 bg-red-50 text-red-600 rounded-full flex items-center justify-center border border-red-100">
                 <AlertTriangle size={40} />
               </div>
               <div>
-                <h3 className="text-2xl font-black text-zinc-900 tracking-tight uppercase">Confirmar Exclusão</h3>
-                <p className="text-zinc-500 mt-2">
-                  Você tem certeza que deseja excluir este jovem? Esta ação removerá todos os dados permanentemente e não pode ser desfeita.
+                <h3 className="text-2xl font-serif font-bold text-church-dark">Confirmar Exclusão</h3>
+                <p className="text-stone-500 mt-3 text-sm leading-relaxed">
+                  Esta ação é irreversível e removerá permanentemente o registro do arquivo paroquial. Deseja prosseguir?
                 </p>
               </div>
             </div>
             
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
                 onClick={() => setDeleteId(null)}
                 disabled={isDeleting}
-                className="w-full sm:w-auto px-8 py-3 text-zinc-600 font-bold hover:bg-zinc-100 rounded-xl transition-colors"
+                className="w-full sm:w-auto px-10 py-4 text-stone-400 font-black uppercase tracking-widest hover:text-church-dark hover:bg-stone-100 rounded-xl transition-all text-xs"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleDelete}
                 disabled={isDeleting}
-                className="w-full sm:w-auto px-8 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-red-600/20 disabled:opacity-50"
+                className="w-full sm:w-auto px-10 py-4 bg-red-600 text-white font-black uppercase tracking-widest rounded-xl hover:bg-red-700 transition-all flex items-center justify-center gap-3 shadow-xl shadow-red-600/20 disabled:opacity-50 text-xs"
               >
                 {isDeleting ? (
                   <>
-                    <Loader2 className="animate-spin" size={20} />
-                    Excluindo...
+                    <Loader2 className="animate-spin" size={18} />
+                    Processando...
                   </>
                 ) : (
                   <>
-                    <Trash2 size={20} />
+                    <Trash2 size={18} />
                     Sim, Excluir
                   </>
                 )}

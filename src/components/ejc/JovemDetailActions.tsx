@@ -15,32 +15,32 @@ export function JovemDetailActions({ jovemId }: JovemDetailActionsProps) {
   const { role, hasPermission } = useAuth();
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 print:hidden">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-6 print:hidden">
       <button
         onClick={() => navigate('/ejc/jovens')}
-        className="flex items-center gap-2 text-stone-500 hover:text-stone-900 transition-colors font-medium"
+        className="flex items-center gap-3 text-stone-400 hover:text-church-dark transition-all font-black uppercase tracking-[0.2em] text-[10px]"
       >
-        <ArrowLeft size={20} />
-        Voltar para Lista
+        <ArrowLeft size={18} />
+        Retornar ao Arquivo
       </button>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         <button
           type="button"
           onClick={() => window.print()}
-          className="flex items-center gap-2 px-4 py-2 bg-white border border-stone-200 text-stone-700 rounded-xl font-medium hover:bg-stone-50 transition-all shadow-sm active:scale-95"
+          className="flex items-center gap-3 px-6 py-3 bg-white border border-church-border text-church-dark rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-stone-50 transition-all shadow-sm active:scale-95"
         >
           <Printer size={18} />
-          Imprimir Ficha
+          Imprimir Registro
         </button>
         {hasPermission('can_edit_jovens') && (
           <button
             type="button"
             onClick={() => navigate(`/ejc/jovens/editar/${jovemId}`)}
-            className="flex items-center gap-2 px-6 py-2 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-all shadow-md active:scale-95"
+            className="flex items-center gap-3 px-8 py-3 bg-church-brown text-white rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-church-dark transition-all shadow-xl shadow-church-brown/20 active:scale-95"
           >
             <Edit2 size={18} />
-            Editar Cadastro
+            Retificar Dados
           </button>
         )}
       </div>

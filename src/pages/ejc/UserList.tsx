@@ -85,75 +85,75 @@ export function UserList() {
 
   const PermissionBadge = ({ active, label }: { active: boolean, label: string }) => (
     <div className={cn(
-      "flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider",
-      active ? "bg-emerald-50 text-emerald-700 border border-emerald-100" : "bg-stone-50 text-stone-400 border border-stone-100"
+      "flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider",
+      active ? "bg-church-green/10 text-church-green border border-church-green/20" : "bg-stone-50 text-stone-300 border border-stone-100"
     )}>
-      {active ? <Check size={10} /> : <X size={10} />}
+      {active ? <Check size={10} strokeWidth={3} /> : <X size={10} strokeWidth={3} />}
       {label}
     </div>
   );
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-10 animate-in fade-in duration-700">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-4xl font-black text-stone-900 tracking-tight uppercase">Usuários e Permissões</h1>
-          <p className="text-stone-500 font-medium">Gerencie a equipe e os níveis de acesso ao sistema.</p>
+          <h1 className="text-4xl font-serif font-bold text-church-dark">Secretaria e Chancelaria</h1>
+          <p className="text-stone-500 mt-1">Gestão de oficiais, colaboradores e níveis de acesso administrativo.</p>
         </div>
         
         {hasPermission('can_create_users') && (
           <button
             onClick={() => navigate('/ejc/usuarios/novo')}
-            className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-stone-900 text-white font-bold hover:bg-stone-800 transition-all shadow-lg shadow-stone-900/10 active:scale-95"
+            className="flex items-center justify-center gap-3 px-8 py-3.5 rounded-xl bg-church-brown text-white font-black uppercase tracking-widest text-[10px] hover:bg-church-dark transition-all shadow-xl shadow-church-brown/20 active:scale-95"
           >
-            <UserPlus size={20} />
-            Novo Usuário
+            <UserPlus size={18} />
+            Nomear Novo Oficial
           </button>
         )}
       </div>
 
       {/* Filtros e Busca */}
-      <div className="bg-white p-4 rounded-2xl border border-stone-100 shadow-sm flex flex-col md:flex-row gap-4">
+      <div className="bg-white p-5 rounded-2xl border border-church-border shadow-sm flex flex-col md:flex-row gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={20} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-300" size={18} />
           <input
             type="text"
-            placeholder="Buscar por nome ou email..."
+            placeholder="Pesquisar por nome ou endereço eletrônico..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+            className="w-full pl-12 pr-4 py-3.5 bg-stone-50/50 border border-church-border rounded-xl focus:outline-none focus:ring-2 focus:ring-church-gold/20 focus:border-church-gold transition-all text-church-dark placeholder:text-stone-300"
           />
         </div>
       </div>
 
       {/* Tabela de Usuários */}
-      <div className="bg-white rounded-2xl border border-stone-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-church-border shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-stone-50/50 border-b border-stone-100">
-                <th className="px-6 py-4 text-xs font-bold text-stone-500 uppercase tracking-wider">Usuário</th>
-                <th className="px-6 py-4 text-xs font-bold text-stone-500 uppercase tracking-wider">Perfil (Role)</th>
-                <th className="px-6 py-4 text-xs font-bold text-stone-500 uppercase tracking-wider">Permissões</th>
-                <th className="px-6 py-4 text-xs font-bold text-stone-500 uppercase tracking-wider text-right">Ações</th>
+              <tr className="bg-stone-50/50 border-b border-church-border">
+                <th className="px-8 py-5 text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">Oficial / Colaborador</th>
+                <th className="px-8 py-5 text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">Função (Role)</th>
+                <th className="px-8 py-5 text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">Atribuições</th>
+                <th className="px-8 py-5 text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] text-right">Ações</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100">
+            <tbody className="divide-y divide-church-border">
               {loading ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center">
-                    <div className="flex flex-col items-center gap-2 text-stone-400">
+                  <td colSpan={4} className="px-8 py-16 text-center">
+                    <div className="flex flex-col items-center gap-3 text-church-gold">
                       <Loader2 className="animate-spin" size={32} />
-                      <p className="text-sm font-medium">Carregando usuários...</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest">Consultando Arquivos...</p>
                     </div>
                   </td>
                 </tr>
               ) : filteredUsers.length > 0 ? (
                 filteredUsers.map((user) => (
                   <tr key={user.id} className="hover:bg-stone-50/50 transition-colors group">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-500 font-bold overflow-hidden border border-stone-200">
+                    <td className="px-8 py-5">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-church-beige-light flex items-center justify-center text-church-dark font-serif text-xl font-bold overflow-hidden border border-church-border shadow-sm">
                           {user.avatar_url ? (
                             <img src={user.avatar_url} alt={user.nome || ''} className="w-full h-full object-cover" />
                           ) : (
@@ -161,17 +161,17 @@ export function UserList() {
                           )}
                         </div>
                         <div>
-                          <p className="text-sm font-bold text-stone-800">{user.nome || 'Sem nome'}</p>
-                          <p className="text-xs text-stone-500">{user.email}</p>
+                          <p className="text-sm font-bold text-church-dark">{user.nome || 'Oficial não identificado'}</p>
+                          <p className="text-xs text-stone-400 font-medium">{user.email}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-8 py-5">
                       <div className={cn(
-                        "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-tight",
-                        user.role === 'admin' ? "bg-red-50 text-red-700" : 
-                        user.role === 'equipe' ? "bg-blue-50 text-blue-700" : 
-                        "bg-stone-100 text-stone-600"
+                        "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest",
+                        user.role === 'admin' ? "bg-red-50 text-red-700 border border-red-100" : 
+                        user.role === 'equipe' ? "bg-church-brown/10 text-church-brown border border-church-brown/20" : 
+                        "bg-stone-100 text-stone-500 border border-stone-200"
                       )}>
                         {user.role === 'admin' ? <ShieldCheck size={14} /> : 
                          user.role === 'equipe' ? <Shield size={14} /> : 
@@ -179,28 +179,28 @@ export function UserList() {
                         {user.role}
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-8 py-5">
                       <div className="flex flex-wrap gap-2">
-                        <PermissionBadge active={user.can_view_jovens} label="Ver Jovens" />
-                        <PermissionBadge active={user.can_edit_jovens} label="Editar Jovens" />
-                        <PermissionBadge active={user.can_create_users} label="Criar Usuários" />
-                        <PermissionBadge active={user.can_manage_permissions} label="Gerir Permissões" />
+                        <PermissionBadge active={user.can_view_jovens} label="Consulta" />
+                        <PermissionBadge active={user.can_edit_jovens} label="Retificação" />
+                        <PermissionBadge active={user.can_create_users} label="Nomeação" />
+                        <PermissionBadge active={user.can_manage_permissions} label="Chancelaria" />
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-8 py-5 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button
                           onClick={() => navigate(`/ejc/usuarios/visualizar/${user.id}`)}
-                          className="p-2 text-stone-500 hover:text-stone-900 hover:bg-stone-100 rounded-lg transition-all"
-                          title="Visualizar"
+                          className="p-2.5 text-stone-400 hover:text-church-dark hover:bg-stone-100 rounded-xl transition-all"
+                          title="Visualizar Detalhes"
                         >
                           <Eye size={18} />
                         </button>
                         {hasPermission('can_manage_permissions') && (
                           <button
                             onClick={() => navigate(`/ejc/usuarios/editar/${user.id}`)}
-                            className="p-2 text-stone-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all"
-                            title="Editar Permissões"
+                            className="p-2.5 text-stone-400 hover:text-church-gold hover:bg-church-gold/5 rounded-xl transition-all"
+                            title="Retificar Atribuições"
                           >
                             <Edit2 size={18} />
                           </button>
@@ -208,8 +208,8 @@ export function UserList() {
                         {currentUserRole === 'admin' && (
                           <button
                             onClick={() => setDeleteId(user.id)}
-                            className="p-2 text-stone-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-                            title="Excluir Usuário"
+                            className="p-2.5 text-stone-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
+                            title="Remover Oficial"
                           >
                             <Trash2 size={18} />
                           </button>
@@ -220,10 +220,10 @@ export function UserList() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center">
-                    <div className="flex flex-col items-center gap-2 text-stone-400">
-                      <AlertCircle size={40} />
-                      <p className="text-sm font-medium">Nenhum usuário encontrado.</p>
+                  <td colSpan={4} className="px-8 py-16 text-center">
+                    <div className="flex flex-col items-center gap-3 text-stone-300">
+                      <AlertCircle size={48} />
+                      <p className="text-[10px] font-black uppercase tracking-widest">Nenhum oficial localizado nos registros.</p>
                     </div>
                   </td>
                 </tr>
@@ -235,42 +235,42 @@ export function UserList() {
 
       {/* Modal de Confirmação de Exclusão */}
       {deleteId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl w-full max-w-md p-8 shadow-2xl animate-in zoom-in-95 duration-200">
-            <div className="flex flex-col items-center text-center gap-4 mb-8">
-              <div className="p-4 bg-red-50 text-red-600 rounded-2xl">
-                <AlertCircle size={40} />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-church-dark/40 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-white rounded-3xl w-full max-w-md p-10 shadow-2xl border border-church-border animate-in zoom-in-95 duration-300">
+            <div className="flex flex-col items-center text-center gap-6 mb-10">
+              <div className="p-5 bg-red-50 text-red-600 rounded-2xl border border-red-100">
+                <AlertCircle size={48} />
               </div>
               <div>
-                <h3 className="text-2xl font-black text-stone-900 tracking-tight uppercase">Excluir Usuário?</h3>
-                <p className="text-stone-500 mt-2">
-                  Esta ação removerá o perfil do usuário do sistema. O acesso ao Auth deve ser removido manualmente no painel do Supabase.
+                <h3 className="text-3xl font-serif font-bold text-church-dark">Revogar Acesso?</h3>
+                <p className="text-stone-500 mt-3 leading-relaxed">
+                  Esta ação removerá permanentemente o oficial dos registros administrativos. O acesso técnico deve ser revogado manualmente no console central.
                 </p>
               </div>
             </div>
             
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
                 onClick={() => setDeleteId(null)}
                 disabled={isDeleting}
-                className="w-full sm:w-auto px-8 py-3 text-stone-600 font-bold hover:bg-stone-100 rounded-xl transition-colors"
+                className="w-full sm:w-auto px-10 py-3.5 text-stone-400 font-black uppercase tracking-widest text-[10px] hover:bg-stone-50 rounded-xl transition-all"
               >
-                Cancelar
+                Manter Registro
               </button>
               <button
                 onClick={handleDeleteUser}
                 disabled={isDeleting}
-                className="w-full sm:w-auto px-8 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-red-600/20 disabled:opacity-50"
+                className="w-full sm:w-auto px-10 py-3.5 bg-red-600 text-white font-black uppercase tracking-widest text-[10px] rounded-xl hover:bg-red-700 transition-all flex items-center justify-center gap-3 shadow-xl shadow-red-600/20 disabled:opacity-50"
               >
                 {isDeleting ? (
                   <>
-                    <Loader2 className="animate-spin" size={20} />
-                    Excluindo...
+                    <Loader2 className="animate-spin" size={16} />
+                    Processando...
                   </>
                 ) : (
                   <>
-                    <Trash2 size={20} />
-                    Sim, Excluir
+                    <Trash2 size={16} />
+                    Confirmar Remoção
                   </>
                 )}
               </button>
