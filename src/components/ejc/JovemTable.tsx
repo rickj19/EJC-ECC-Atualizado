@@ -55,29 +55,29 @@ export function JovemTable({
   );
 
   return (
-    <div className="bg-white rounded-2xl border border-church-border shadow-sm overflow-hidden">
+    <div className="paper-card overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-stone-50/50 border-b border-church-border">
-              <th className="px-6 py-5 text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">Foto</th>
-              <th className="px-6 py-5 text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">
+            <tr className="bg-church-bg/10 border-b border-church-border/30">
+              <th className="px-10 py-8 text-[10px] font-black text-church-gold uppercase tracking-[0.3em] border-r border-church-border/10 last:border-r-0">Foto</th>
+              <th className="px-10 py-8 text-[10px] font-black text-church-gold uppercase tracking-[0.3em] border-r border-church-border/10 last:border-r-0">
                 <SortButton field="nome_completo" label="Nome Completo" />
               </th>
-              <th className="px-6 py-5 text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">Nome Social</th>
-              <th className="px-6 py-5 text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">Localidade</th>
-              <th className="px-6 py-5 text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">Contato</th>
-              <th className="px-6 py-5 text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] text-center">Vínculo EJC</th>
-              <th className="px-6 py-5 text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">Pastoral</th>
-              <th className="px-6 py-5 text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] text-right">Ações</th>
+              <th className="px-10 py-8 text-[10px] font-black text-church-gold uppercase tracking-[0.3em] border-r border-church-border/10 last:border-r-0">Nome Social</th>
+              <th className="px-10 py-8 text-[10px] font-black text-church-gold uppercase tracking-[0.3em] border-r border-church-border/10 last:border-r-0">Localidade</th>
+              <th className="px-10 py-8 text-[10px] font-black text-church-gold uppercase tracking-[0.3em] border-r border-church-border/10 last:border-r-0">Contato</th>
+              <th className="px-10 py-8 text-[10px] font-black text-church-gold uppercase tracking-[0.3em] border-r border-church-border/10 last:border-r-0 text-center">Vínculo EJC</th>
+              <th className="px-10 py-8 text-[10px] font-black text-church-gold uppercase tracking-[0.3em] border-r border-church-border/10 last:border-r-0">Pastoral</th>
+              <th className="px-10 py-8 text-[10px] font-black text-church-gold uppercase tracking-[0.3em] text-right">Ações</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-church-border">
+          <tbody className="divide-y divide-church-border/10">
             {jovens.length > 0 ? (
               jovens.map((jovem) => (
-                <tr key={jovem.id} className="hover:bg-stone-50/50 transition-colors group">
-                  <td className="px-6 py-4">
-                    <div className="w-12 h-12 rounded-xl bg-stone-100 overflow-hidden border border-church-border flex-shrink-0 shadow-sm">
+                <tr key={jovem.id} className="hover:bg-church-bg/5 transition-colors group">
+                  <td className="px-10 py-7 border-r border-church-border/5 last:border-r-0">
+                    <div className="w-16 h-16 rounded bg-church-beige-light overflow-hidden border border-church-border/30 flex-shrink-0 shadow-inner">
                       {jovem.foto_url ? (
                         <img 
                           src={jovem.foto_url} 
@@ -86,87 +86,82 @@ export function JovemTable({
                           referrerPolicy="no-referrer"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-stone-300">
-                          <User size={24} />
+                        <div className="w-full h-full flex items-center justify-center text-church-dark/20">
+                          <User size={32} strokeWidth={1} />
                         </div>
                       )}
                     </div>
                   </td>
-                  <td className="px-6 py-4">
-                    <p className="text-sm font-bold text-church-dark font-serif">{jovem.nome_completo}</p>
-                    <p className="text-[10px] text-stone-400 uppercase font-black tracking-wider mt-0.5">
-                      Registro: {new Date(jovem.created_at).toLocaleDateString('pt-BR')}
+                  <td className="px-10 py-7 border-r border-church-border/5 last:border-r-0">
+                    <p className="text-lg font-bold text-church-dark font-display tracking-tight leading-tight">{jovem.nome_completo}</p>
+                    <p className="text-[10px] text-stone-400 uppercase font-black tracking-[0.2em] mt-1.5 flex items-center gap-2">
+                      <span className="w-1 h-1 rounded-full bg-church-gold/40" />
+                      Assentamento: {new Date(jovem.created_at).toLocaleDateString('pt-BR')}
                     </p>
                   </td>
-                  <td className="px-6 py-4">
-                    <p className="text-sm text-stone-600 italic">{jovem.nome_chamado || '-'}</p>
+                  <td className="px-10 py-7 border-r border-church-border/5 last:border-r-0">
+                    <p className="text-base text-stone-600 font-serif italic">{jovem.nome_chamado || '-'}</p>
                   </td>
-                  <td className="px-6 py-4">
-                    <p className="text-sm text-stone-600 font-medium">{jovem.bairro || '-'}</p>
+                  <td className="px-10 py-7 border-r border-church-border/5 last:border-r-0">
+                    <p className="text-base text-stone-600 font-medium tracking-tight">{jovem.bairro || '-'}</p>
                   </td>
-                  <td className="px-6 py-4">
-                    <p className="text-sm text-stone-600">{jovem.contato}</p>
+                  <td className="px-10 py-7 border-r border-church-border/5 last:border-r-0">
+                    <p className="text-base text-stone-600 font-mono tracking-tighter">{jovem.contato}</p>
                   </td>
-                  <td className="px-6 py-4 text-center">
+                  <td className="px-10 py-7 border-r border-church-border/5 last:border-r-0 text-center">
                     <span className={cn(
-                      "inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest",
+                      "inline-flex items-center px-5 py-2 rounded text-[9px] font-black uppercase tracking-[0.25em] border transition-all",
                       jovem.vivenciou_ejc 
-                        ? "bg-church-brown/10 text-church-brown border border-church-brown/20" 
-                        : "bg-stone-100 text-stone-500 border border-stone-200"
+                        ? "bg-church-brown/10 text-church-brown border-church-brown/30 shadow-sm" 
+                        : "bg-stone-50 text-stone-400 border-stone-200"
                     )}>
-                      {jovem.vivenciou_ejc ? 'Vivenciou' : 'Não'}
+                      {jovem.vivenciou_ejc ? 'Vivenciou' : 'Não Consta'}
                     </span>
                   </td>
-                  <td className="px-6 py-4">
-                    <p className="text-sm text-stone-600 truncate max-w-[150px]" title={jovem.qual_pastoral || ''}>
+                  <td className="px-10 py-7 border-r border-church-border/5 last:border-r-0">
+                    <p className="text-base text-stone-600 truncate max-w-[180px] font-serif italic" title={jovem.qual_pastoral || ''}>
                       {jovem.membro_pastoral ? (jovem.qual_pastoral || 'Sim') : 'Nenhuma'}
                     </p>
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <td className="px-10 py-7 text-right">
+                    <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
                       <button
                         onClick={() => onView(jovem.id)}
-                        className="p-2.5 text-stone-400 hover:text-church-dark hover:bg-stone-100 rounded-xl transition-all"
-                        title="Visualizar Detalhes"
+                        className="p-3 text-stone-400 hover:text-church-dark hover:bg-stone-100 rounded border border-transparent hover:border-church-border/30 transition-all"
+                        title="Visualizar Prontuário"
                       >
-                        <Eye size={18} />
+                        <Eye size={20} strokeWidth={1.5} />
                       </button>
                       {hasPermission('can_edit_jovens') && (
                         <button
                           onClick={() => onEdit(jovem.id)}
-                          className="p-2.5 text-stone-400 hover:text-church-brown hover:bg-church-brown/5 rounded-xl transition-all"
-                          title="Editar Registro"
+                          className="p-3 text-stone-400 hover:text-church-gold hover:bg-church-gold/5 rounded border border-transparent hover:border-church-gold/20 transition-all"
+                          title="Retificar Registro"
                         >
-                          <Edit2 size={18} />
+                          <Edit2 size={20} strokeWidth={1.5} />
                         </button>
                       )}
                       {role === 'admin' && (
                         <button
                           onClick={() => onDelete(jovem.id)}
-                          className="p-2.5 text-stone-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
-                          title="Excluir Registro"
+                          className="p-3 text-stone-400 hover:text-red-600 hover:bg-red-50 rounded border border-transparent hover:border-red-200 transition-all"
+                          title="Remover do Arquivo"
                         >
-                          <Trash2 size={18} />
+                          <Trash2 size={20} strokeWidth={1.5} />
                         </button>
                       )}
-                    </div>
-                    {/* Mobile Actions */}
-                    <div className="md:hidden">
-                       <button className="p-2 text-stone-400">
-                         <MoreHorizontal size={20} />
-                       </button>
                     </div>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={8} className="px-6 py-20 text-center">
-                  <div className="flex flex-col items-center gap-4 text-stone-300">
-                    <AlertCircle size={48} strokeWidth={1.5} />
-                    <div className="space-y-1">
-                      <p className="text-lg font-serif font-bold text-stone-400">Nenhum registro encontrado</p>
-                      <p className="text-sm text-stone-300">Tente ajustar os filtros de pesquisa.</p>
+                <td colSpan={8} className="px-10 py-32 text-center">
+                  <div className="flex flex-col items-center gap-8 text-stone-300">
+                    <AlertCircle size={72} strokeWidth={1} />
+                    <div className="space-y-4">
+                      <p className="text-3xl font-display font-bold text-stone-400 tracking-tight">Nenhum registro localizado</p>
+                      <p className="text-lg text-stone-300 font-serif italic">A consulta aos arquivos da secretaria não retornou resultados para os critérios informados.</p>
                     </div>
                   </div>
                 </td>
@@ -178,30 +173,33 @@ export function JovemTable({
 
       {/* Paginação */}
       {totalPages > 1 && (
-        <div className="px-8 py-5 bg-stone-50/50 border-t border-church-border flex items-center justify-between">
-          <p className="text-[10px] font-black text-stone-400 uppercase tracking-widest">
-            Exibindo <span className="text-church-dark">{jovens.length}</span> de <span className="text-church-dark">{totalCount}</span> registros
-          </p>
+        <div className="px-12 py-10 bg-church-bg/10 border-t border-church-border/30 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="flex items-center gap-4">
+            <div className="w-1 h-10 bg-church-gold/30 rounded-full" />
+            <p className="text-[11px] font-black text-stone-400 uppercase tracking-[0.3em]">
+              Exibindo <span className="text-church-dark font-bold">{jovens.length}</span> de <span className="text-church-dark font-bold">{totalCount}</span> assentamentos paroquiais
+            </p>
+          </div>
           
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-6">
             <button
               onClick={() => onPageChange(page - 1)}
               disabled={page === 1}
-              className="p-2.5 rounded-xl border border-church-border bg-white text-stone-400 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-50 transition-all shadow-sm"
+              className="p-4 rounded border border-church-border/30 bg-white text-stone-400 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-50 transition-all shadow-sm hover:shadow-md"
             >
-              <ChevronLeft size={16} />
+              <ChevronLeft size={20} strokeWidth={1.5} />
             </button>
             
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
                 <button
                   key={p}
                   onClick={() => onPageChange(p)}
                   className={cn(
-                    "w-10 h-10 rounded-xl text-xs font-black transition-all",
+                    "w-14 h-14 rounded border text-[11px] font-black uppercase tracking-widest transition-all duration-300",
                     page === p 
-                      ? "bg-church-dark text-white shadow-lg shadow-church-dark/20" 
-                      : "bg-white border border-church-border text-stone-400 hover:bg-stone-50"
+                      ? "bg-church-dark border-church-dark text-white shadow-2xl shadow-church-dark/30 scale-110 z-10" 
+                      : "bg-white border-church-border/30 text-stone-400 hover:bg-stone-50 hover:border-church-border"
                   )}
                 >
                   {p}
@@ -212,9 +210,9 @@ export function JovemTable({
             <button
               onClick={() => onPageChange(page + 1)}
               disabled={page === totalPages}
-              className="p-2.5 rounded-xl border border-church-border bg-white text-stone-400 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-50 transition-all shadow-sm"
+              className="p-4 rounded border border-church-border/30 bg-white text-stone-400 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-50 transition-all shadow-sm hover:shadow-md"
             >
-              <ChevronRight size={16} />
+              <ChevronRight size={20} strokeWidth={1.5} />
             </button>
           </div>
         </div>

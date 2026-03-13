@@ -43,44 +43,44 @@ export function JovemFilters({
   const hasActiveFilters = filters.bairro || filters.vivenciou_ejc !== 'all' || filters.pastoral || filters.sacramento;
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" size={18} />
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="relative flex-1 max-w-lg">
+          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-church-gold/40" size={20} strokeWidth={1.5} />
           <input
             type="text"
-            placeholder="Pesquisar por nome ou apelido..."
+            placeholder="Pesquisar por nome ou apelido nos arquivos..."
             value={filters.searchTerm}
             onChange={(e) => handleChange('searchTerm', e.target.value)}
-            className="w-full pl-12 pr-4 py-3 rounded-xl border border-church-border focus:ring-2 focus:ring-church-brown/20 focus:border-church-brown outline-none transition-all bg-white/50 text-sm font-medium"
+            className="institutional-input pl-14"
           />
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
           <button
             onClick={() => setShowFilters(!showFilters)}
             className={cn(
-              "flex items-center gap-3 px-6 py-3 rounded-xl border font-black uppercase tracking-widest text-[10px] transition-all",
+              "flex items-center gap-4 px-8 py-4 rounded border font-black uppercase tracking-[0.25em] text-[11px] transition-all",
               showFilters || hasActiveFilters
-                ? "bg-church-dark border-church-dark text-white shadow-lg shadow-church-dark/20" 
+                ? "bg-church-dark border-church-dark text-white shadow-xl shadow-church-dark/20" 
                 : "bg-white border-church-border text-stone-600 hover:bg-stone-50"
             )}
           >
-            <Filter size={16} />
-            Filtros Avançados
+            <Filter size={18} strokeWidth={1.5} />
+            Filtros Administrativos
             {hasActiveFilters && (
-              <span className="ml-1 w-2 h-2 bg-church-gold rounded-full animate-pulse" />
+              <span className="ml-2 w-2.5 h-2.5 bg-church-gold rounded-full animate-pulse" />
             )}
-            <ChevronDown size={14} className={cn("transition-transform ml-1", showFilters && "rotate-180")} />
+            <ChevronDown size={16} className={cn("transition-transform ml-2", showFilters && "rotate-180")} />
           </button>
           
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="text-stone-400 hover:text-red-600 p-2 transition-colors flex items-center gap-2 text-[10px] font-black uppercase tracking-widest"
-              title="Limpar filtros"
+              className="text-stone-400 hover:text-red-600 p-3 transition-colors flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.2em]"
+              title="Limpar todos os filtros"
             >
-              <X size={16} />
+              <X size={18} strokeWidth={1.5} />
               Limpar
             </button>
           )}
@@ -88,25 +88,31 @@ export function JovemFilters({
       </div>
 
       {showFilters && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8 bg-white rounded-2xl border border-church-border shadow-xl animate-in slide-in-from-top-4 duration-300">
-          <div className="space-y-2">
-            <label className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">Bairro / Localidade</label>
+        <div className="paper-card p-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 animate-in slide-in-from-top-6 duration-500 bg-church-bg/5">
+          <div className="space-y-4">
+            <label className="text-[10px] font-black text-church-gold uppercase tracking-[0.3em] flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-church-gold/30" />
+              Bairro / Localidade
+            </label>
             <select
               value={filters.bairro}
               onChange={(e) => handleChange('bairro', e.target.value)}
-              className="w-full px-4 py-2.5 rounded-lg border border-church-border outline-none focus:ring-2 focus:ring-church-brown/20 focus:border-church-brown bg-stone-50 text-sm font-medium text-church-dark"
+              className="institutional-input h-[56px] bg-white"
             >
               <option value="">Todas as localidades</option>
               {bairros.map(b => <option key={b} value={b}>{b}</option>)}
             </select>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">Sacramento</label>
+          <div className="space-y-4">
+            <label className="text-[10px] font-black text-church-gold uppercase tracking-[0.3em] flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-church-gold/30" />
+              Iniciação Cristã
+            </label>
             <select
               value={filters.sacramento}
               onChange={(e) => handleChange('sacramento', e.target.value)}
-              className="w-full px-4 py-2.5 rounded-lg border border-church-border outline-none focus:ring-2 focus:ring-church-brown/20 focus:border-church-brown bg-stone-50 text-sm font-medium text-church-dark"
+              className="institutional-input h-[56px] bg-white"
             >
               <option value="">Todos os sacramentos</option>
               <option value="Batismo">Batismo</option>
@@ -115,15 +121,18 @@ export function JovemFilters({
             </select>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">Vínculo EJC</label>
+          <div className="space-y-4">
+            <label className="text-[10px] font-black text-church-gold uppercase tracking-[0.3em] flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-church-gold/30" />
+              Vínculo EJC
+            </label>
             <select
               value={String(filters.vivenciou_ejc)}
               onChange={(e) => {
                 const val = e.target.value;
                 handleChange('vivenciou_ejc', val === 'all' ? 'all' : val === 'true');
               }}
-              className="w-full px-4 py-2.5 rounded-lg border border-church-border outline-none focus:ring-2 focus:ring-church-brown/20 focus:border-church-brown bg-stone-50 text-sm font-medium text-church-dark"
+              className="institutional-input h-[56px] bg-white"
             >
               <option value="all">Todos os vínculos</option>
               <option value="true">Vivenciou EJC</option>
@@ -131,15 +140,18 @@ export function JovemFilters({
             </select>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">Pastoral / Movimento</label>
+          <div className="space-y-4">
+            <label className="text-[10px] font-black text-church-gold uppercase tracking-[0.3em] flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-church-gold/30" />
+              Pastoral / Movimento
+            </label>
             <div className="relative">
               <input
                 type="text"
-                placeholder="Ex: Coroinhas..."
+                placeholder="Ex: Coroinhas, Catequese..."
                 value={filters.pastoral}
                 onChange={(e) => handleChange('pastoral', e.target.value)}
-                className="w-full px-4 py-2.5 rounded-lg border border-church-border outline-none focus:ring-2 focus:ring-church-brown/20 focus:border-church-brown bg-stone-50 text-sm font-medium text-church-dark"
+                className="institutional-input h-[56px] bg-white"
               />
             </div>
           </div>

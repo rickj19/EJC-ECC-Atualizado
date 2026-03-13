@@ -15,31 +15,31 @@ export function JovemDetailActions({ jovemId }: JovemDetailActionsProps) {
   const { role, hasPermission } = useAuth();
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-6 print:hidden">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-8 print:hidden">
       <button
         onClick={() => navigate('/ejc/jovens')}
-        className="flex items-center gap-3 text-stone-400 hover:text-church-dark transition-all font-black uppercase tracking-[0.2em] text-[10px]"
+        className="flex items-center gap-3 text-stone-400 hover:text-church-gold transition-all font-black uppercase tracking-[0.3em] text-[11px] group"
       >
-        <ArrowLeft size={18} />
+        <ArrowLeft size={20} strokeWidth={1.5} className="group-hover:-translate-x-1 transition-transform" />
         Retornar ao Arquivo
       </button>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-6">
         <button
           type="button"
           onClick={() => window.print()}
-          className="flex items-center gap-3 px-6 py-3 bg-white border border-church-border text-church-dark rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-stone-50 transition-all shadow-sm active:scale-95"
+          className="flex items-center gap-3 px-8 py-4 bg-white border border-church-border text-church-dark rounded-xl font-black uppercase tracking-[0.2em] text-[11px] hover:bg-stone-50 transition-all shadow-sm active:scale-95"
         >
-          <Printer size={18} />
+          <Printer size={20} strokeWidth={1.5} />
           Imprimir Registro
         </button>
         {hasPermission('can_edit_jovens') && (
           <button
             type="button"
             onClick={() => navigate(`/ejc/jovens/editar/${jovemId}`)}
-            className="flex items-center gap-3 px-8 py-3 bg-church-brown text-white rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-church-dark transition-all shadow-xl shadow-church-brown/20 active:scale-95"
+            className="institutional-button-primary px-10 py-4"
           >
-            <Edit2 size={18} />
+            <Edit2 size={20} strokeWidth={1.5} />
             Retificar Dados
           </button>
         )}

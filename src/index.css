@@ -1,26 +1,54 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Playfair Display", serif;
+  --font-serif: "Cormorant Garamond", serif;
+  --font-display: "Playfair Display", serif;
   
-  --color-church-brown: #6B4A2B;
-  --color-church-dark: #3E2A1B;
+  --color-church-brown: #5A3F27;
+  --color-church-dark: #2F2216;
   --color-church-beige: #E7D8C5;
-  --color-church-bg: #F5EEE5;
-  --color-church-gold: #C89A55;
-  --color-church-green: #1E8F63;
-  --color-church-text: #2B2118;
-  --color-church-border: #D8C8B6;
+  --color-church-beige-light: #F4EEE6;
+  --color-church-bg: #F9F6F2;
+  --color-church-gold: #B8914C;
+  --color-church-gold-light: #D4AF37;
+  --color-church-green: #1F6F4A;
+  --color-church-text: #2C2118;
+  --color-church-border: #D9C9B5;
 }
 
 @layer base {
   body {
-    @apply bg-church-bg text-church-text font-sans;
+    @apply bg-church-bg text-church-text font-sans antialiased;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif;
+    @apply font-display tracking-tight;
+  }
+
+  /* Custom Scrollbar for Institutional Feel */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-church-bg;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-church-border rounded-full hover:bg-church-gold transition-colors;
+  }
+}
+
+@layer components {
+  .paper-card {
+    @apply bg-white border border-church-border shadow-[0_4px_20px_rgba(0,0,0,0.03)] rounded-lg;
+  }
+  
+  .institutional-input {
+    @apply w-full px-4 py-3 bg-white border border-church-border rounded-md focus:outline-none focus:ring-1 focus:ring-church-gold focus:border-church-gold transition-all text-church-text placeholder:text-stone-300;
+  }
+
+  .institutional-button-primary {
+    @apply flex items-center justify-center gap-2 px-6 py-3 bg-church-brown text-white font-serif font-bold rounded-md hover:bg-church-dark transition-all shadow-md active:scale-[0.98] disabled:opacity-50;
   }
 }
