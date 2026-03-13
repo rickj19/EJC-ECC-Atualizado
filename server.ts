@@ -26,6 +26,79 @@ async function startServer() {
     res.json({ status: 'ok', message: 'EJC System API is running' });
   });
 
+  // Endpoint simulando a Edge Function do Supabase para o ambiente de preview
+  app.post('/functions/v1/create-user', async (req, res) => {
+    const authHeader = req.headers.authorization;
+    const { nome, email, password, role, permissions } = req.body;
+
+    console.log(`[API/Edge] Request to create user: ${email}`);
+    res.setHeader('Content-Type', 'application/json');
+
+    if (!authHeader) {
+      return res.status(401).json({ error: 'Não autorizado: Token ausente.' });
+    }
+
+    try {
+      // 1. Validar o usuário logado via Bearer token
+      const token = authHeader.replace('Bearer ', '');
+      const { data: { user: currentUser }, error: authError } = await supabaseAdmin.auth.getUser(token);
+
+      if (authError || !currentUser) {
+        return res.status(401).json({ error: 'Não autorizado: Sessão inválida.' });
+      }
+
+      // 2. Verificar permissões no banco
+      const { data: profile, error: profileError } = await supabaseAdmin
+        .from('profiles')
+        .select('role, can_create_users')
+        .eq('id', currentUser.id)
+        .single();
+
+      if (profileError || !profile) {
+        return res.status(403).json({ error: 'Erro ao verificar permissões.' });
+      }
+
+      if (profile.role !== 'admin' && !profile.can_create_users) {
+        return res.status(403).json({ error: 'Acesso negado: Sem permissão para criar usuários.' });
+      }
+
+      // 3. Criar o novo usuário
+      const { data: authData, error: createError } = await supabaseAdmin.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
+        user_metadata: { 
+          nome, 
+          role,
+          ...permissions 
+        }
+      });
+
+      if (createError) throw createError;
+
+      // 4. Upsert no perfil
+      const { error: upsertError } = await supabaseAdmin
+        .from('profiles')
+        .upsert({
+          id: authData.user.id,
+          nome,
+          email,
+          role,
+          ...permissions,
+          updated_at: new Date().toISOString()
+        });
+
+      if (upsertError) throw upsertError;
+
+      console.log(`[API/Edge] User ${email} created successfully`);
+      return res.status(200).json({ success: true, user: authData.user });
+
+    } catch (err: any) {
+      console.error('[API/Edge] Error:', err.message);
+      return res.status(400).json({ error: err.message });
+    }
+  });
+
   app.post('/api/admin/create-user', async (req, res) => {
     const { nome, email, password, role, permissions } = req.body;
 

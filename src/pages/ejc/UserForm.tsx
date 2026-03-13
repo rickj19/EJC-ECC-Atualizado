@@ -101,12 +101,16 @@ export function UserForm() {
         if (updateError) throw updateError;
         console.log('[UserForm] User updated successfully');
       } else {
-        // Create new user via Backend Admin API
-        console.log('[UserForm] Creating new user:', formData.email);
-        const response = await fetch('/api/admin/create-user', {
+        // Create new user via Supabase Edge Function
+        console.log('[UserForm] Creating new user via Edge Function:', formData.email);
+        
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        const response = await fetch('/functions/v1/create-user', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session?.access_token}`,
           },
           body: JSON.stringify({
             nome: formData.nome,
