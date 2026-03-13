@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -9,12 +9,11 @@
   --color-church-dark: #3E2A1B;
   --color-church-brown: #6B4A2B;
   --color-church-gold: #C89A55;
-  --color-church-gold-light: #D4AF37;
   --color-church-beige: #E7D8C5;
-  --color-church-beige-light: #F5EFE6;
-  --color-church-bg: #FDFBF9;
-  --color-church-border: #D1C4B2;
-  --color-church-text: #3E2A1B;
+  --color-church-beige-light: #F5EEE5;
+  --color-church-bg: #FAF7F2;
+  --color-church-border: #D9C9B5;
+  --color-church-text: #2C2118;
   --color-church-green: #1E8F63;
 }
 
@@ -24,37 +23,51 @@
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display tracking-tight;
+    @apply font-display tracking-tight text-church-dark;
   }
 
-  /* Custom Scrollbar for Institutional Feel */
+  /* Custom Scrollbar */
   ::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
   }
   ::-webkit-scrollbar-track {
     @apply bg-church-bg;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-church-border rounded-none hover:bg-church-gold transition-colors;
+    @apply bg-church-border/60 rounded-full hover:bg-church-gold/40 transition-colors;
   }
 }
 
 @layer components {
-  .paper-card {
-    @apply bg-white border border-church-border shadow-[0_10px_40px_rgba(47,34,22,0.05)] rounded-sm relative;
+  .institutional-card {
+    @apply bg-white border border-church-border/40 shadow-[0_4px_20px_rgba(44,33,24,0.03)] rounded-lg overflow-hidden transition-all;
   }
 
-  .paper-card::before {
-    content: '';
-    @apply absolute inset-0 opacity-[0.03] pointer-events-none;
-    background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
-  }
-  
   .institutional-input {
-    @apply w-full bg-church-beige-light/30 border border-church-border rounded-sm px-6 py-4 focus:outline-none focus:ring-1 focus:ring-church-gold focus:border-church-gold transition-all text-church-dark placeholder:text-stone-300 shadow-inner;
+    @apply w-full bg-white border border-church-border/50 rounded-md px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-church-gold/30 focus:border-church-gold/50 transition-all text-church-text placeholder:text-stone-300 text-sm;
   }
 
   .institutional-button-primary {
-    @apply bg-church-brown text-church-beige px-10 py-5 rounded-sm font-black uppercase tracking-[0.4em] text-[11px] hover:bg-church-dark transition-all flex items-center justify-center gap-4 shadow-xl shadow-church-brown/10 active:scale-95 disabled:opacity-50;
+    @apply bg-church-brown text-white px-6 py-2.5 rounded-md font-medium text-sm hover:bg-church-dark transition-all flex items-center justify-center gap-2 shadow-sm active:scale-[0.98] disabled:opacity-50;
+  }
+
+  .institutional-button-secondary {
+    @apply bg-white text-church-brown border border-church-border/60 px-6 py-2.5 rounded-md font-medium text-sm hover:bg-church-beige-light transition-all flex items-center justify-center gap-2 shadow-sm active:scale-[0.98];
+  }
+
+  .institutional-table {
+    @apply w-full text-left border-collapse;
+  }
+
+  .institutional-table th {
+    @apply px-6 py-4 text-[11px] font-bold text-church-brown/60 uppercase tracking-widest border-b border-church-border/30 bg-church-bg/50;
+  }
+
+  .institutional-table td {
+    @apply px-6 py-4 text-sm border-b border-church-border/20 text-church-text/80;
+  }
+
+  .institutional-label {
+    @apply block text-[11px] font-bold text-church-brown/70 uppercase tracking-wider mb-1.5 ml-0.5;
   }
 }

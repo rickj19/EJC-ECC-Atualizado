@@ -12,21 +12,14 @@ interface DetailSectionProps {
 export function DetailSection({ title, icon: Icon, children, className }: DetailSectionProps) {
   return (
     <div className={cn(
-      "paper-card p-12 print:p-8 relative overflow-hidden",
+      "institutional-card p-6 print:p-4",
       className
     )}>
-      {/* Subtle background icon */}
-      <div className="absolute top-0 right-0 -mt-8 -mr-8 text-church-bg/10 pointer-events-none">
-        <Icon size={160} strokeWidth={0.5} />
+      <div className="flex items-center gap-3 mb-6 border-b border-church-border/20 pb-4 print:mb-4 print:pb-2">
+        <Icon size={18} strokeWidth={1.5} className="text-church-gold" />
+        <h3 className="text-lg font-bold text-church-dark tracking-tight print:text-base">{title}</h3>
       </div>
-
-      <div className="flex items-center gap-6 mb-12 border-b border-church-border/30 pb-8 print:mb-6 print:pb-3 relative z-10">
-        <div className="w-14 h-14 bg-church-bg/50 rounded-2xl text-church-gold flex items-center justify-center border border-church-border/30 shadow-inner print:w-8 print:h-8 print:bg-transparent print:border-none print:shadow-none">
-          <Icon size={28} strokeWidth={1} className="print:w-5 print:h-5" />
-        </div>
-        <h3 className="text-3xl font-display font-bold text-church-dark tracking-tight print:text-xl">{title}</h3>
-      </div>
-      <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 relative z-10">
+      <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
         {children}
       </div>
     </div>
@@ -41,17 +34,14 @@ interface DetailItemProps {
 }
 
 export function DetailItem({ label, value, icon: Icon, fullWidth }: DetailItemProps) {
-  const displayValue = value === true ? 'Sim' : value === false ? 'Não' : value || 'Não informado';
+  const displayValue = value === true ? 'Sim' : value === false ? 'Não' : value || '-';
   
   return (
-    <div className={cn("space-y-3", fullWidth && "col-span-full")}>
-      <div className="flex items-center gap-3">
-        <div className="w-1.5 h-1.5 rounded-full bg-church-gold/30" />
-        <p className="text-[10px] font-black text-church-gold uppercase tracking-[0.3em] print:text-[9px]">{label}</p>
-      </div>
-      <div className="flex items-start gap-4 pl-4">
-        {Icon && <Icon size={18} strokeWidth={1} className="text-stone-300 mt-1 print:hidden shrink-0" />}
-        <p className="text-lg font-serif font-bold text-church-dark leading-snug print:text-base">{displayValue}</p>
+    <div className={cn("space-y-1", fullWidth && "col-span-full")}>
+      <p className="institutional-label">{label}</p>
+      <div className="flex items-start gap-2">
+        {Icon && <Icon size={14} strokeWidth={1.5} className="text-stone-300 mt-0.5 print:hidden shrink-0" />}
+        <p className="text-sm font-medium text-church-dark leading-snug print:text-sm">{displayValue}</p>
       </div>
     </div>
   );

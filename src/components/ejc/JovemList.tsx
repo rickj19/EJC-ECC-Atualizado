@@ -95,7 +95,6 @@ export function JovemList() {
       fetchJovens();
     } catch (err) {
       console.error('Erro ao excluir jovem:', err);
-      alert('Erro ao excluir o registro. Tente novamente.');
     } finally {
       setIsDeleting(false);
     }
@@ -107,12 +106,12 @@ export function JovemList() {
   };
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-700">
+    <div className="space-y-8 animate-in fade-in duration-700">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div>
-          <h1 className="text-5xl font-display font-bold text-church-dark tracking-tight">Arquivo de Jovens</h1>
-          <p className="text-lg font-serif italic text-stone-500 mt-2">Gestão administrativa e catalogação dos registros da comunidade paroquial.</p>
+          <h1 className="text-3xl font-display font-bold text-church-dark tracking-tight">Arquivo de Jovens</h1>
+          <p className="text-stone-400 text-sm mt-1">Gestão e catalogação dos registros paroquiais.</p>
         </div>
         
         {hasPermission('can_edit_jovens') && (
@@ -120,8 +119,8 @@ export function JovemList() {
             onClick={() => navigate('/ejc/jovens/novo')}
             className="institutional-button-primary"
           >
-            <Plus size={20} strokeWidth={1.5} />
-            Novo Registro de Admissão
+            <Plus size={18} strokeWidth={1.5} />
+            Novo Registro
           </button>
         )}
       </div>
@@ -137,12 +136,9 @@ export function JovemList() {
 
       {/* Tabela ou Loading */}
       {loading ? (
-        <div className="paper-card flex flex-col items-center justify-center py-40 gap-8">
-          <Loader2 className="animate-spin text-church-gold" size={56} strokeWidth={1.5} />
-          <div className="text-center">
-            <p className="text-church-dark font-display text-2xl font-bold tracking-tight">Consultando Arquivos Centrais</p>
-            <p className="text-stone-400 text-[11px] uppercase tracking-[0.3em] font-black mt-3">Aguarde a resposta da secretaria...</p>
-          </div>
+        <div className="institutional-card flex flex-col items-center justify-center py-32 gap-4">
+          <Loader2 className="animate-spin text-church-gold" size={32} strokeWidth={1.5} />
+          <p className="text-stone-400 text-xs uppercase tracking-widest font-bold">Consultando Arquivos...</p>
         </div>
       ) : (
         <JovemTable 
@@ -160,44 +156,44 @@ export function JovemList() {
         />
       )}
 
-      {/* Modal de Confirmação de Exclusão - Institutional Style */}
+      {/* Modal de Confirmação de Exclusão */}
       {deleteId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-church-dark/60 backdrop-blur-sm animate-in fade-in duration-500">
-          <div className="bg-white rounded w-full max-w-lg p-12 shadow-2xl animate-in zoom-in-95 duration-300 border border-church-border">
-            <div className="flex flex-col items-center text-center gap-8 mb-12">
-              <div className="w-20 h-20 bg-red-50 text-red-600 rounded flex items-center justify-center border border-red-100 shadow-inner">
-                <AlertTriangle size={48} strokeWidth={1.5} />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-church-dark/40 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-white rounded-2xl w-full max-w-md p-10 shadow-2xl animate-in zoom-in-95 duration-200 border border-church-border/30">
+            <div className="flex flex-col items-center text-center gap-6 mb-10">
+              <div className="w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center border border-red-100">
+                <AlertTriangle size={32} strokeWidth={1.5} />
               </div>
               <div>
-                <h3 className="text-4xl font-display font-bold text-church-dark tracking-tight">Confirmar Exclusão</h3>
-                <p className="text-lg font-serif italic text-stone-500 mt-4 leading-relaxed">
-                  Esta ação é irreversível e removerá permanentemente o registro do arquivo paroquial. Deseja prosseguir com a baixa deste assentamento?
+                <h3 className="text-xl font-display font-bold text-church-dark">Confirmar Exclusão</h3>
+                <p className="text-sm text-stone-500 mt-2 leading-relaxed">
+                  Deseja remover permanentemente este registro do arquivo paroquial? Esta ação não pode ser desfeita.
                 </p>
               </div>
             </div>
             
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <button
                 onClick={() => setDeleteId(null)}
                 disabled={isDeleting}
-                className="w-full sm:w-auto px-12 py-4 text-stone-400 font-black uppercase tracking-[0.2em] text-[11px] hover:bg-stone-50 rounded transition-all border border-transparent hover:border-stone-200"
+                className="w-full sm:w-auto px-8 py-3 text-stone-400 font-bold uppercase tracking-widest text-[10px] hover:bg-stone-50 rounded-lg transition-all"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleDelete}
                 disabled={isDeleting}
-                className="w-full sm:w-auto px-12 py-4 bg-red-600 text-white font-black uppercase tracking-[0.2em] text-[11px] rounded hover:bg-red-700 transition-all flex items-center justify-center gap-4 shadow-xl shadow-red-600/20 disabled:opacity-50"
+                className="w-full sm:w-auto px-8 py-3 bg-red-600 text-white font-bold uppercase tracking-widest text-[10px] rounded-lg hover:bg-red-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-red-600/20 disabled:opacity-50"
               >
                 {isDeleting ? (
                   <>
-                    <Loader2 className="animate-spin" size={18} strokeWidth={1.5} />
+                    <Loader2 className="animate-spin" size={14} strokeWidth={1.5} />
                     Processando...
                   </>
                 ) : (
                   <>
-                    <Trash2 size={18} strokeWidth={1.5} />
-                    Confirmar Baixa
+                    <Trash2 size={14} strokeWidth={1.5} />
+                    Confirmar
                   </>
                 )}
               </button>
