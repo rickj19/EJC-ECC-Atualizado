@@ -12,7 +12,7 @@ interface JovemDetailActionsProps {
 
 export function JovemDetailActions({ jovemId }: JovemDetailActionsProps) {
   const navigate = useNavigate();
-  const { role } = useAuth();
+  const { role, hasPermission } = useAuth();
 
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 print:hidden">
@@ -33,7 +33,7 @@ export function JovemDetailActions({ jovemId }: JovemDetailActionsProps) {
           <Printer size={18} />
           Imprimir Ficha
         </button>
-        {role !== 'participante' && (
+        {hasPermission('can_edit_jovens') && (
           <button
             type="button"
             onClick={() => navigate(`/ejc/jovens/editar/${jovemId}`)}

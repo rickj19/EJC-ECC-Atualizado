@@ -10,6 +10,9 @@ import { JovemForm } from './components/ejc/JovemForm';
 import { JovemDetails } from './components/ejc/JovemDetails';
 import { EJCLayout } from './components/ejc/EJCLayout';
 import { RoleGuard } from './components/RoleGuard';
+import { PermissionGuard } from './components/PermissionGuard';
+import { UserList } from './pages/ejc/UserList';
+import { UserForm } from './pages/ejc/UserForm';
 
 export default function App() {
   return (
@@ -28,26 +31,43 @@ export default function App() {
                   <Routes>
                     <Route path="dashboard" element={<Dashboard />} />
                     
-                    {/* Rotas de Jovens - Admin e Equipe */}
+                    {/* Rotas de Jovens */}
                     <Route path="jovens" element={
-                      <RoleGuard allowedRoles={['admin', 'equipe']}>
+                      <PermissionGuard permission="can_view_jovens">
                         <JovemList />
-                      </RoleGuard>
+                      </PermissionGuard>
                     } />
                     <Route path="jovens/novo" element={
-                      <RoleGuard allowedRoles={['admin', 'equipe']}>
+                      <PermissionGuard permission="can_edit_jovens">
                         <JovemForm />
-                      </RoleGuard>
+                      </PermissionGuard>
                     } />
                     <Route path="jovens/editar/:id" element={
-                      <RoleGuard allowedRoles={['admin', 'equipe']}>
+                      <PermissionGuard permission="can_edit_jovens">
                         <EditJovemWrapper />
-                      </RoleGuard>
+                      </PermissionGuard>
                     } />
                     <Route path="jovens/visualizar/:id" element={
-                      <RoleGuard allowedRoles={['admin', 'equipe', 'participante']}>
+                      <PermissionGuard permission="can_view_jovens">
                         <JovemDetails />
-                      </RoleGuard>
+                      </PermissionGuard>
+                    } />
+
+                    {/* Rotas de Usuários */}
+                    <Route path="usuarios" element={
+                      <PermissionGuard permission="can_create_users">
+                        <UserList />
+                      </PermissionGuard>
+                    } />
+                    <Route path="usuarios/novo" element={
+                      <PermissionGuard permission="can_create_users">
+                        <UserForm />
+                      </PermissionGuard>
+                    } />
+                    <Route path="usuarios/editar/:id" element={
+                      <PermissionGuard permission="can_manage_permissions">
+                        <UserForm />
+                      </PermissionGuard>
                     } />
                     
                     <Route path="*" element={<Navigate to="dashboard" replace />} />

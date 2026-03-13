@@ -26,7 +26,7 @@ interface EJCLayoutProps {
 export function EJCLayout({ children }: EJCLayoutProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, profile, role, signOut } = useAuth();
+  const { user, profile, role, signOut, hasPermission } = useAuth();
 
   const handleLogout = async () => {
     await signOut();
@@ -35,17 +35,25 @@ export function EJCLayout({ children }: EJCLayoutProps) {
 
   const menuItems = [
     { label: 'Dashboard', path: '/ejc/dashboard', icon: LayoutDashboard, roles: ['admin', 'equipe'] },
-    { label: 'Jovens', path: '/ejc/jovens', icon: Users, roles: ['admin', 'equipe'] },
+    { label: 'Jovens', path: '/ejc/jovens', icon: Users, roles: ['admin', 'equipe', 'usuario'], permission: 'can_view_jovens' },
     { label: 'Membros EJC', path: '/ejc/membros', icon: Star, roles: ['admin', 'equipe'], disabled: true },
     { label: 'Círculos', path: '/ejc/circulos', icon: CircleDot, roles: ['admin', 'equipe'], disabled: true },
-    { label: 'Usuários', path: '/ejc/usuarios', icon: ShieldCheck, roles: ['admin'], disabled: true },
+    { label: 'Usuários', path: '/ejc/usuarios', icon: ShieldCheck, roles: ['admin'], permission: 'can_create_users' },
     { label: 'Relatórios', path: '/ejc/relatorios', icon: FileBarChart, roles: ['admin', 'equipe'], disabled: true },
     { label: 'Configurações', path: '/ejc/config', icon: Settings, roles: ['admin'], disabled: true },
     { label: 'Minha área', path: '/ejc/perfil', icon: User, roles: ['participante'], disabled: true },
     { label: 'Dados básicos', path: '/ejc/dados', icon: Info, roles: ['participante'], disabled: true },
   ];
 
-  const filteredMenuItems = menuItems.filter(item => role && item.roles.includes(role));
+  const filteredMenuItems = menuItems.filter(item => {
+    if (!role) return false;
+    if (item.permission && !hasPermission(item.permission as any)) {
+      // If it has a permission but user doesn't have it, hide it
+      // UNLESS they are admin (hasPermission handles admin)
+      return false;
+    }
+    return item.roles.includes(role) || role === 'admin';
+  });
 
   return (
     <div className="min-h-screen bg-[#f8f9fa] flex">

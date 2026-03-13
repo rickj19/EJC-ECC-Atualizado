@@ -11,6 +11,7 @@ interface AuthContextType {
   loading: boolean;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
+  hasPermission: (permission: keyof Pick<Profile, 'can_view_jovens' | 'can_edit_jovens' | 'can_create_users' | 'can_manage_permissions'>) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -94,6 +95,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await supabase.auth.signOut();
   };
 
+  const hasPermission = (permission: keyof Pick<Profile, 'can_view_jovens' | 'can_edit_jovens' | 'can_create_users' | 'can_manage_permissions'>) => {
+    if (profile?.role === 'admin') return true;
+    return profile ? !!profile[permission] : false;
+  };
+
   return (
     <AuthContext.Provider value={{ 
       user, 
@@ -102,7 +108,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       role: profile?.role ?? null, 
       loading, 
       signOut,
-      refreshProfile
+      refreshProfile,
+      hasPermission
     }}>
       {children}
     </AuthContext.Provider>

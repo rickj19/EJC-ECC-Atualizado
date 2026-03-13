@@ -41,7 +41,7 @@ export function JovemTable({
   pageSize,
   onPageChange
 }: JovemTableProps) {
-  const { role } = useAuth();
+  const { role, hasPermission } = useAuth();
   const totalPages = Math.ceil(totalCount / pageSize);
 
   const SortButton = ({ field, label }: { field: string, label: string }) => (
@@ -129,13 +129,15 @@ export function JovemTable({
                       >
                         <Eye size={18} />
                       </button>
-                      <button
-                        onClick={() => onEdit(jovem.id)}
-                        className="p-2 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition-all"
-                        title="Editar"
-                      >
-                        <Edit2 size={18} />
-                      </button>
+                      {hasPermission('can_edit_jovens') && (
+                        <button
+                          onClick={() => onEdit(jovem.id)}
+                          className="p-2 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition-all"
+                          title="Editar"
+                        >
+                          <Edit2 size={18} />
+                        </button>
+                      )}
                       {role === 'admin' && (
                         <button
                           onClick={() => onDelete(jovem.id)}
