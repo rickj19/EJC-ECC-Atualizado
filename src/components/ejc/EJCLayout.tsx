@@ -53,21 +53,21 @@ export function EJCLayout({ children }: EJCLayoutProps) {
 
   return (
     <div className="min-h-screen bg-church-bg flex font-sans text-church-text overflow-hidden">
-      {/* Sidebar - Minimalist Institutional */}
-      <aside className="w-72 bg-white border-r border-church-border/40 flex flex-col hidden lg:flex sticky top-0 h-screen print:hidden z-30">
-        <div className="p-10 border-b border-church-border/20">
+      {/* Sidebar - Premium Brown */}
+      <aside className="w-72 bg-church-dark flex flex-col hidden lg:flex sticky top-0 h-screen print:hidden z-30 shadow-2xl shadow-church-dark/40">
+        <div className="p-12">
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-church-beige-light rounded-lg flex items-center justify-center text-church-gold border border-church-border/30">
-              <Church className="w-6 h-6" strokeWidth={1.5} />
+            <div className="w-10 h-10 bg-white/5 backdrop-blur-xl rounded-xl flex items-center justify-center text-church-gold border border-white/10 shadow-xl">
+              <Church className="w-5 h-5" strokeWidth={1} />
             </div>
             <div>
-              <h2 className="font-display font-bold text-xl text-church-dark tracking-tight">Sistema EJC</h2>
-              <p className="text-[9px] text-church-brown/50 uppercase font-bold tracking-[0.3em] mt-1">Gestão Pastoral</p>
+              <h2 className="font-display font-bold text-xl text-white tracking-tight leading-none">EJC</h2>
+              <p className="text-[7px] text-church-gold uppercase font-bold tracking-[0.3em] mt-1.5 opacity-60">Gestão Pastoral</p>
             </div>
           </div>
         </div>
 
-        <nav className="flex-1 p-6 space-y-1 overflow-y-auto">
+        <nav className="flex-1 px-8 py-4 space-y-1.5 overflow-y-auto custom-scrollbar">
           {filteredMenuItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path || (item.path !== '/ejc/dashboard' && location.pathname.startsWith(item.path));
@@ -78,98 +78,122 @@ export function EJCLayout({ children }: EJCLayoutProps) {
                 disabled={item.disabled}
                 onClick={() => navigate(item.path)}
                 className={cn(
-                  "w-full flex items-center gap-4 px-5 py-3 rounded-md transition-all group relative",
+                  "w-full flex items-center gap-4 px-5 py-3.5 rounded-xl transition-all duration-500 group relative",
                   isActive 
-                    ? "bg-church-beige-light text-church-brown font-medium" 
-                    : "text-stone-400 hover:text-church-brown hover:bg-church-bg/50",
-                  item.disabled && "opacity-30 cursor-not-allowed"
+                    ? "bg-white/5 text-white font-medium" 
+                    : "text-church-beige/30 hover:text-church-beige hover:bg-white/5",
+                  item.disabled && "opacity-10 cursor-not-allowed"
                 )}
               >
                 {isActive && (
                   <motion.div 
                     layoutId="active-nav-indicator"
-                    className="absolute left-0 top-2 bottom-2 w-1 bg-church-gold/60 rounded-r-full"
+                    className="absolute left-0 top-3 bottom-3 w-1 bg-church-gold rounded-r-full shadow-[0_0_10px_rgba(200,154,85,0.4)]"
                   />
                 )}
                 <Icon className={cn(
-                  "w-4 h-4",
-                  isActive ? "text-church-gold" : "text-stone-300 group-hover:text-church-gold/60"
+                  "w-4 h-4 transition-all duration-500",
+                  isActive ? "text-church-gold scale-110" : "text-church-beige/20 group-hover:text-church-gold/50 group-hover:scale-110"
                 )} strokeWidth={isActive ? 2 : 1.5} />
-                <span className="text-[11px] uppercase tracking-wider">
+                <span className="text-[9px] uppercase tracking-[0.2em] font-bold">
                   {item.label}
                 </span>
+                {item.disabled && (
+                  <span className="ml-auto text-[7px] bg-white/5 px-1.5 py-0.5 rounded-md opacity-30">Breve</span>
+                )}
               </button>
             );
           })}
         </nav>
 
-        <div className="p-6 border-t border-church-border/20 bg-church-bg/30">
-          <div className="flex items-center gap-4 mb-6 px-2">
-            <div className="w-10 h-10 rounded-full bg-church-beige border border-church-border/40 flex items-center justify-center text-church-brown font-display font-bold text-sm overflow-hidden">
-              {profile?.avatar_url ? (
-                <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
-              ) : (
-                profile?.nome?.charAt(0) || user?.email?.charAt(0).toUpperCase()
-              )}
+        <div className="p-8 mt-auto">
+          <div className="bg-white/5 rounded-2xl p-5 border border-white/5 backdrop-blur-sm">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-10 h-10 rounded-xl bg-church-gold/10 border border-church-gold/10 flex items-center justify-center text-church-gold font-display font-bold text-base overflow-hidden">
+                {profile?.avatar_url ? (
+                  <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                ) : (
+                  profile?.nome?.charAt(0) || user?.email?.charAt(0).toUpperCase()
+                )}
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-bold text-white truncate leading-tight tracking-tight">
+                  {profile?.nome || user?.email?.split('@')[0]}
+                </p>
+                <p className="text-[8px] text-church-gold uppercase font-bold tracking-[0.15em] mt-1 opacity-50">
+                  {role || 'Oficial'}
+                </p>
+              </div>
             </div>
-            <div className="min-w-0">
-              <p className="text-sm font-bold text-church-dark truncate leading-tight">
-                {profile?.nome || user?.email?.split('@')[0]}
-              </p>
-              <p className="text-[9px] text-church-gold uppercase font-bold tracking-widest mt-0.5">
-                {role || 'Oficial'}
-              </p>
-            </div>
+            
+            <button 
+              onClick={handleLogout}
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-church-beige/20 hover:text-red-400 hover:bg-red-400/10 transition-all duration-500 group border border-transparent hover:border-red-400/20"
+            >
+              <LogOut size={14} strokeWidth={1.5} className="group-hover:-translate-x-1 transition-transform" />
+              <span className="text-[9px] font-bold uppercase tracking-[0.15em]">Sair</span>
+            </button>
           </div>
-          
-          <button 
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-stone-400 hover:text-red-600 hover:bg-red-50 transition-all group"
-          >
-            <LogOut size={14} strokeWidth={1.5} />
-            <span className="text-[10px] font-bold uppercase tracking-widest">Sair</span>
-          </button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 print:block overflow-y-auto h-screen custom-scrollbar">
-        {/* Topbar - Minimalist */}
-        <header className="h-20 bg-white/80 backdrop-blur-md border-b border-church-border/30 px-10 flex items-center justify-between sticky top-0 z-20 print:hidden">
-          <div className="flex items-center gap-8">
-            <div className="hidden md:block">
-              <h1 className="text-lg font-display font-bold text-church-dark tracking-tight">Paróquia São Francisco de Assis</h1>
-              <p className="text-[9px] text-church-gold uppercase font-bold tracking-[0.2em] mt-0.5">Secretaria Paroquial</p>
+      <main className="flex-1 flex flex-col min-w-0 print:block overflow-y-auto h-screen custom-scrollbar bg-church-bg relative">
+        {/* Subtle Church Watermark Background */}
+        <div 
+          className="absolute inset-0 pointer-events-none opacity-[0.03] grayscale mix-blend-multiply z-0"
+          style={{ 
+            backgroundImage: 'url("https://images.unsplash.com/photo-1548625361-195fe57724e1?q=80&w=1920&auto=format&fit=crop")',
+            backgroundSize: '800px',
+            backgroundPosition: 'center 200px',
+            backgroundRepeat: 'no-repeat'
+          }}
+        />
+
+        {/* Topbar - Modern & Clean */}
+        <header className="h-24 bg-church-bg/60 backdrop-blur-xl border-b border-church-border/10 px-12 flex items-center justify-between sticky top-0 z-20 print:hidden">
+          <div className="flex items-center gap-12">
+            <div className="hidden xl:block">
+              <h1 className="text-xl font-display font-bold text-church-dark tracking-tight">Paróquia São Francisco de Assis</h1>
+              <div className="flex items-center gap-2.5 mt-1">
+                <div className="w-1 h-1 bg-church-gold rounded-full opacity-40" />
+                <p className="text-[8px] text-church-brown/30 uppercase font-bold tracking-[0.25em]">Secretaria Paroquial</p>
+              </div>
             </div>
-            <div className="h-8 w-px bg-church-border/40 hidden md:block" />
-            <div className="relative w-80 group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-300 group-focus-within:text-church-gold/60 transition-colors" strokeWidth={1.5} />
+            <div className="h-10 w-px bg-church-border/10 hidden xl:block" />
+            <div className="relative w-[400px] group">
+              <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-300 group-focus-within:text-church-gold transition-all duration-500" strokeWidth={1.5} />
               <input 
                 type="text" 
-                placeholder="Pesquisar no arquivo..."
-                className="w-full pl-11 pr-4 py-2 bg-church-bg/40 border border-church-border/30 rounded-full focus:outline-none focus:ring-1 focus:ring-church-gold/20 focus:border-church-gold/40 transition-all text-xs text-church-dark placeholder:text-stone-300"
+                placeholder="Pesquisar registros..."
+                className="w-full pl-12 pr-6 py-3 bg-white border border-church-border/10 rounded-xl focus:outline-none focus:ring-4 focus:ring-church-gold/5 focus:border-church-gold/20 transition-all duration-500 text-sm text-church-dark placeholder:text-stone-300 shadow-sm"
               />
             </div>
           </div>
 
-          <div className="flex items-center gap-6">
-            <button className="p-2 text-stone-300 hover:text-church-gold transition-all relative">
-              <Bell className="w-5 h-5" strokeWidth={1.5} />
-              <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-church-gold rounded-full border border-white"></span>
-            </button>
+          <div className="flex items-center gap-8">
+            <div className="flex items-center gap-3">
+              <button className="w-11 h-11 flex items-center justify-center rounded-xl text-stone-400 hover:text-church-gold hover:bg-white transition-all duration-500 relative border border-transparent hover:border-church-border/10 hover:shadow-sm">
+                <Bell className="w-5 h-5" strokeWidth={1.5} />
+                <span className="absolute top-3 right-3 w-2 h-2 bg-church-gold rounded-full border-2 border-church-bg"></span>
+              </button>
+              <button className="w-11 h-11 flex items-center justify-center rounded-xl text-stone-400 hover:text-church-gold hover:bg-white transition-all duration-500 border border-transparent hover:border-church-border/10 hover:shadow-sm">
+                <Settings className="w-5 h-5" strokeWidth={1.5} />
+              </button>
+            </div>
             
-            <div className="h-8 w-px bg-church-border/40" />
+            <div className="h-10 w-px bg-church-border/10" />
             
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 group cursor-pointer">
               <div className="text-right hidden sm:block">
-                <p className="text-xs font-bold text-church-dark leading-none">{profile?.nome || user?.email?.split('@')[0]}</p>
-                <p className="text-[9px] text-church-gold font-bold uppercase tracking-widest mt-1">{role || 'Oficial'}</p>
+                <p className="text-xs font-bold text-church-dark leading-none tracking-tight group-hover:text-church-gold transition-colors duration-500">{profile?.nome || user?.email?.split('@')[0]}</p>
+                <p className="text-[9px] text-church-gold font-bold uppercase tracking-[0.15em] mt-1.5 opacity-60">{role || 'Oficial'}</p>
               </div>
-              <div className="w-10 h-10 bg-church-beige-light rounded-full border border-church-border/30 overflow-hidden p-0.5">
+              <div className="w-12 h-12 bg-white rounded-xl border border-church-border/10 overflow-hidden p-1 shadow-sm group-hover:border-church-gold/20 transition-all duration-500">
                 <img 
                   src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email}`} 
                   alt="Avatar" 
-                  className="w-full h-full rounded-full grayscale-[0.2]"
+                  className="w-full h-full rounded-lg grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700"
                 />
               </div>
             </div>
@@ -177,13 +201,18 @@ export function EJCLayout({ children }: EJCLayoutProps) {
         </header>
 
         {/* Content */}
-        <div className="p-8 md:p-12 print:p-0 print:m-0 max-w-6xl mx-auto w-full animate-in fade-in duration-700">
+        <div className="p-12 md:p-20 print:p-0 print:m-0 max-w-7xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-1000">
           {children}
           
-          {/* Minimalist Footer */}
-          <footer className="mt-20 pt-10 border-t border-church-border/20 text-center pb-10">
-            <p className="text-[10px] text-church-brown/30 uppercase tracking-[0.3em] font-bold">Paróquia São Francisco de Assis</p>
-            <p className="text-[9px] text-church-gold/30 uppercase tracking-[0.2em] mt-2">Sistema Interno de Gestão Pastoral</p>
+          {/* Institutional Footer */}
+          <footer className="mt-40 pt-12 border-t border-church-border/5 text-center pb-20">
+            <div className="flex items-center justify-center gap-5 mb-6">
+              <div className="h-px w-12 bg-church-border/10" />
+              <Church className="w-6 h-6 text-church-gold/10" strokeWidth={1} />
+              <div className="h-px w-12 bg-church-border/10" />
+            </div>
+            <p className="text-[10px] text-church-brown/20 uppercase tracking-[0.4em] font-bold">Paróquia São Francisco de Assis</p>
+            <p className="text-[9px] text-church-gold/20 uppercase tracking-[0.2em] mt-3 font-medium">Sistema Interno de Gestão Pastoral</p>
           </footer>
         </div>
       </main>

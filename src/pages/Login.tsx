@@ -15,7 +15,6 @@ const loginSchema = z.object({
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
-
 export default function Login() {
   const [module, setModule] = useState<'EJC' | 'ECC'>('EJC');
   const [loading, setLoading] = useState(false);
@@ -57,44 +56,36 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-church-bg flex flex-col items-center justify-center p-6 relative overflow-hidden">
-      {/* Subtle Church Background Image (Discrete) */}
-      <div 
-        className="absolute inset-0 z-0 opacity-[0.03] grayscale pointer-events-none"
-        style={{ 
-          backgroundImage: 'url("https://images.unsplash.com/photo-1518101645466-7795885ff8f8?q=80&w=1920&auto=format&fit=crop")',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      />
-      
-      <motion.div 
+    <div className="min-h-screen bg-church-bg flex flex-col items-center justify-center p-6 sm:p-8 font-sans selection:bg-church-gold/20">
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative z-10 w-full max-w-[420px]"
+        transition={{ duration: 0.8 }}
+        className="w-full max-w-[440px] space-y-8"
       >
-        {/* Institutional Header */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-white border border-church-border/40 rounded-full mb-6 shadow-sm">
-            <Church className="w-7 h-7 text-church-gold" strokeWidth={1.5} />
+        {/* Header Section */}
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-3xl shadow-sm border border-church-border/30 text-church-brown mb-2">
+            <Church size={40} strokeWidth={1.2} />
           </div>
-          <h1 className="text-2xl font-display font-bold text-church-dark mb-1">Paróquia São Francisco de Assis</h1>
-          <div className="flex items-center justify-center gap-2">
-            <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-church-brown/60">Sistema EJC</span>
-            <span className="w-1 h-1 bg-church-border rounded-full" />
-            <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-church-brown/60 italic">Gestão Pastoral</span>
+          <div className="space-y-1">
+            <h1 className="text-2xl sm:text-3xl font-display font-bold text-church-dark tracking-tight">
+              Paróquia São Francisco de Assis
+            </h1>
+            <p className="text-church-brown/50 text-xs sm:text-sm font-bold uppercase tracking-[0.2em]">
+              Sistema EJC
+            </p>
           </div>
         </div>
 
         {/* Login Card */}
-        <div className="bg-white border border-church-border/30 rounded-xl shadow-[0_8px_30px_rgba(44,33,24,0.04)] p-8 md:p-10">
+        <div className="institutional-card p-8 sm:p-10 bg-white">
           {/* Module Selector */}
-          <div className="flex justify-center gap-8 mb-10">
+          <div className="flex gap-8 mb-10 border-b border-church-border/10">
             <button
               onClick={() => setModule('EJC')}
               className={cn(
-                "pb-3 text-[11px] font-bold uppercase tracking-[0.2em] transition-all relative",
+                "pb-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-all relative",
                 module === 'EJC' 
                   ? "text-church-brown" 
                   : "text-stone-300 hover:text-stone-500"
@@ -104,21 +95,21 @@ export default function Login() {
               {module === 'EJC' && (
                 <motion.div 
                   layoutId="active-tab" 
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-church-gold/60" 
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-church-gold" 
                 />
               )}
             </button>
             <button
               onClick={() => setModule('ECC')}
               className={cn(
-                "pb-3 text-[11px] font-bold uppercase tracking-[0.2em] transition-all relative opacity-50 cursor-not-allowed",
+                "pb-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-all relative opacity-50 cursor-not-allowed",
                 module === 'ECC' 
                   ? "text-church-brown" 
                   : "text-stone-300"
               )}
             >
               ECC
-              <span className="absolute -top-3 -right-6 text-[8px] text-church-gold/60 font-bold">BREVE</span>
+              <span className="absolute -top-3 -right-6 text-[7px] text-church-gold/60 font-bold">BREVE</span>
             </button>
           </div>
 
@@ -126,51 +117,56 @@ export default function Login() {
             {module === 'EJC' ? (
               <motion.form
                 key="ejc-form"
-                initial={{ opacity: 0, x: 5 }}
+                initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -5 }}
+                exit={{ opacity: 0, x: 10 }}
                 onSubmit={handleSubmit(onSubmit)}
                 className="space-y-6"
               >
-                <div className="space-y-2">
-                  <label className="institutional-label">E-mail</label>
-                  <div className="relative group">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-300 group-focus-within:text-church-gold/60 transition-colors" strokeWidth={1.5} />
-                    <input
-                      {...register('email')}
-                      type="email"
-                      placeholder="seu@email.com"
-                      className={cn(
-                        "institutional-input pl-11",
-                        errors.email && "border-red-200 bg-red-50/30"
-                      )}
-                    />
+                <div className="space-y-5">
+                  <div className="space-y-2">
+                    <label className="institutional-label">Email</label>
+                    <div className="relative group">
+                      <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-300 group-focus-within:text-church-gold transition-colors" strokeWidth={1.5} />
+                      <input
+                        {...register('email')}
+                        type="email"
+                        className={cn(
+                          "institutional-input pl-12",
+                          errors.email && "border-red-200 bg-red-50/30"
+                        )}
+                        placeholder="seu@email.com"
+                      />
+                    </div>
+                    {errors.email && <p className="text-red-500 text-[9px] mt-1.5 ml-1 font-bold uppercase tracking-wider">{errors.email.message}</p>}
                   </div>
-                  {errors.email && <p className="text-red-500 text-[10px] mt-1 ml-1">{errors.email.message}</p>}
-                </div>
 
-                <div className="space-y-2">
-                  <label className="institutional-label">Senha</label>
-                  <div className="relative group">
-                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-300 group-focus-within:text-church-gold/60 transition-colors" strokeWidth={1.5} />
-                    <input
-                      {...register('password')}
-                      type="password"
-                      placeholder="••••••••"
-                      className={cn(
-                        "institutional-input pl-11",
-                        errors.password && "border-red-200 bg-red-50/30"
-                      )}
-                    />
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <label className="institutional-label mb-0">Senha</label>
+                      <button type="button" className="text-[9px] text-church-gold hover:text-church-brown font-bold uppercase tracking-widest transition-colors">Esqueceu?</button>
+                    </div>
+                    <div className="relative group">
+                      <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-300 group-focus-within:text-church-gold transition-colors" strokeWidth={1.5} />
+                      <input
+                        {...register('password')}
+                        type="password"
+                        className={cn(
+                          "institutional-input pl-12",
+                          errors.password && "border-red-200 bg-red-50/30"
+                        )}
+                        placeholder="••••••••"
+                      />
+                    </div>
+                    {errors.password && <p className="text-red-500 text-[9px] mt-1.5 ml-1 font-bold uppercase tracking-wider">{errors.password.message}</p>}
                   </div>
-                  {errors.password && <p className="text-red-500 text-[10px] mt-1 ml-1">{errors.password.message}</p>}
                 </div>
 
                 {error && (
                   <motion.div 
-                    initial={{ opacity: 0, scale: 0.98 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="p-3 bg-red-50 border border-red-100 rounded-md text-red-800 text-[11px] text-center"
+                    className="p-4 bg-red-50 border border-red-100 rounded-xl text-red-800 text-[10px] font-bold uppercase tracking-wider text-center"
                   >
                     {error}
                   </motion.div>
@@ -179,32 +175,31 @@ export default function Login() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full institutional-button-primary mt-4"
+                  className="institutional-button-primary w-full py-5 text-sm"
                 >
-                  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
+                  {loading ? (
+                    <Loader2 className="animate-spin" size={20} />
+                  ) : (
                     <>
-                      Entrar no Sistema
-                      <ArrowRight className="w-4 h-4" strokeWidth={2} />
+                      <span>Entrar no Sistema</span>
+                      <ArrowRight size={18} />
                     </>
                   )}
                 </button>
               </motion.form>
             ) : (
-              <div className="py-10 text-center">
-                <Heart className="w-10 h-10 text-stone-100 mx-auto mb-4" strokeWidth={1} />
-                <p className="text-stone-400 font-serif italic text-base">Módulo ECC em breve...</p>
+              <div className="py-12 text-center bg-church-bg/50 rounded-3xl border border-church-border/10">
+                <Heart className="w-10 h-10 text-stone-200 mx-auto mb-4" strokeWidth={1} />
+                <p className="text-stone-400 font-serif italic text-lg">Módulo ECC disponível em breve</p>
               </div>
             )}
           </AnimatePresence>
         </div>
 
         {/* Footer */}
-        <div className="mt-12 text-center">
-          <p className="text-[10px] text-church-brown/40 uppercase tracking-[0.3em] font-medium">
-            Sistema Interno de Gestão Pastoral
-          </p>
-          <p className="text-[9px] text-church-gold/40 uppercase tracking-[0.2em] mt-2 font-bold italic">
-            Pax et Bonum
+        <div className="text-center pt-4">
+          <p className="text-[9px] text-church-brown/30 uppercase font-bold tracking-[0.3em]">
+            © 2026 Paróquia São Francisco de Assis
           </p>
         </div>
       </motion.div>

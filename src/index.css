@@ -6,68 +6,69 @@
   --font-serif: "Cormorant Garamond", serif;
   --font-display: "Playfair Display", serif;
   
-  --color-church-dark: #3E2A1B;
-  --color-church-brown: #6B4A2B;
+  --color-church-dark: #3D2618;
+  --color-church-brown: #7A5332;
+  --color-church-brown-medium: #8B6340;
   --color-church-gold: #C89A55;
   --color-church-beige: #E7D8C5;
-  --color-church-beige-light: #F5EEE5;
-  --color-church-bg: #FAF7F2;
-  --color-church-border: #D9C9B5;
+  --color-church-beige-light: #F9F6F2;
+  --color-church-bg: #FCFAF7;
+  --color-church-border: #E8DFD5;
   --color-church-text: #2C2118;
   --color-church-green: #1E8F63;
 }
 
 @layer base {
   body {
-    @apply bg-church-bg text-church-text font-sans antialiased;
+    @apply bg-church-bg text-church-text font-sans antialiased selection:bg-church-gold/20 selection:text-church-dark;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display tracking-tight text-church-dark;
+    @apply font-display tracking-tight text-church-dark leading-tight;
   }
 
-  /* Custom Scrollbar */
+  /* Custom Scrollbar - More subtle */
   ::-webkit-scrollbar {
-    width: 5px;
+    width: 4px;
   }
   ::-webkit-scrollbar-track {
-    @apply bg-church-bg;
+    @apply bg-transparent;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-church-border/60 rounded-full hover:bg-church-gold/40 transition-colors;
+    @apply bg-church-border/40 rounded-full hover:bg-church-gold/30 transition-colors;
   }
 }
 
 @layer components {
   .institutional-card {
-    @apply bg-white border border-church-border/40 shadow-[0_4px_20px_rgba(44,33,24,0.03)] rounded-lg overflow-hidden transition-all;
+    @apply bg-white border border-church-border/30 shadow-[0_8px_30px_rgba(61,38,24,0.02)] rounded-3xl overflow-hidden transition-all duration-500;
   }
 
   .institutional-input {
-    @apply w-full bg-white border border-church-border/50 rounded-md px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-church-gold/30 focus:border-church-gold/50 transition-all text-church-text placeholder:text-stone-300 text-sm;
+    @apply w-full bg-church-beige-light/30 border border-church-border/40 rounded-2xl px-6 py-4 lg:py-4 focus:outline-none focus:ring-4 focus:ring-church-gold/5 focus:border-church-gold/30 focus:bg-white transition-all duration-500 text-church-text placeholder:text-stone-300 text-sm;
   }
 
   .institutional-button-primary {
-    @apply bg-church-brown text-white px-6 py-2.5 rounded-md font-medium text-sm hover:bg-church-dark transition-all flex items-center justify-center gap-2 shadow-sm active:scale-[0.98] disabled:opacity-50;
+    @apply bg-church-brown text-white px-8 py-5 lg:py-4 rounded-2xl font-bold text-[11px] uppercase tracking-[0.2em] hover:bg-church-dark transition-all duration-500 flex items-center justify-center gap-3 shadow-xl shadow-church-brown/10 active:scale-[0.98] disabled:opacity-50;
   }
 
   .institutional-button-secondary {
-    @apply bg-white text-church-brown border border-church-border/60 px-6 py-2.5 rounded-md font-medium text-sm hover:bg-church-beige-light transition-all flex items-center justify-center gap-2 shadow-sm active:scale-[0.98];
+    @apply bg-white text-church-brown border border-church-border/40 px-8 py-4 rounded-2xl font-bold text-[11px] uppercase tracking-[0.2em] hover:bg-church-beige-light transition-all duration-500 flex items-center justify-center gap-3 shadow-sm active:scale-[0.98];
   }
 
   .institutional-table {
-    @apply w-full text-left border-collapse;
+    @apply w-full text-left border-separate border-spacing-0;
   }
 
   .institutional-table th {
-    @apply px-6 py-4 text-[11px] font-bold text-church-brown/60 uppercase tracking-widest border-b border-church-border/30 bg-church-bg/50;
+    @apply px-8 py-6 text-[10px] font-bold text-church-brown/40 uppercase tracking-[0.3em] border-b border-church-border/20 bg-church-bg/30;
   }
 
   .institutional-table td {
-    @apply px-6 py-4 text-sm border-b border-church-border/20 text-church-text/80;
+    @apply px-8 py-6 text-sm border-b border-church-border/10 text-church-text/80 transition-colors duration-500;
   }
 
   .institutional-label {
-    @apply block text-[11px] font-bold text-church-brown/70 uppercase tracking-wider mb-1.5 ml-0.5;
+    @apply block text-[10px] font-bold text-church-brown/40 uppercase tracking-[0.25em] mb-2.5 ml-1;
   }
 }

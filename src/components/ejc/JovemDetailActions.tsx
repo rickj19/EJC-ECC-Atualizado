@@ -15,32 +15,34 @@ export function JovemDetailActions({ jovemId }: JovemDetailActionsProps) {
   const { role, hasPermission } = useAuth();
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 print:hidden">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-6 print:hidden mb-10">
       <button
         onClick={() => navigate('/ejc/jovens')}
-        className="flex items-center gap-2 text-stone-400 hover:text-church-gold transition-all font-bold uppercase tracking-widest text-[10px] group"
+        className="flex items-center gap-3 text-church-brown/40 hover:text-church-brown transition-all font-bold uppercase tracking-[0.3em] text-[10px] group"
       >
-        <ArrowLeft size={16} strokeWidth={1.5} className="group-hover:-translate-x-1 transition-transform" />
-        Retornar
+        <div className="w-8 h-8 rounded-full border border-church-border/30 flex items-center justify-center group-hover:border-church-brown/30 transition-colors">
+          <ArrowLeft size={14} strokeWidth={2} className="group-hover:-translate-x-1 transition-transform" />
+        </div>
+        Retornar ao Arquivo
       </button>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         <button
           type="button"
           onClick={() => window.print()}
-          className="flex items-center gap-2 px-4 py-2.5 bg-white border border-church-border/40 text-stone-600 rounded-lg font-bold uppercase tracking-widest text-[10px] hover:bg-stone-50 transition-all shadow-sm active:scale-95"
+          className="flex items-center gap-3 px-6 py-3 bg-white border border-church-border/30 text-church-brown rounded-2xl font-bold uppercase tracking-widest text-[10px] hover:bg-church-bg transition-all shadow-lg shadow-church-dark/5 active:scale-95"
         >
-          <Printer size={16} strokeWidth={1.5} />
-          Imprimir
+          <Printer size={16} strokeWidth={2} className="text-church-gold" />
+          Gerar Documento
         </button>
         {hasPermission('can_edit_jovens') && (
           <button
             type="button"
             onClick={() => navigate(`/ejc/jovens/editar/${jovemId}`)}
-            className="institutional-button-primary"
+            className="institutional-button-primary px-8 py-3 rounded-2xl shadow-xl shadow-church-brown/20"
           >
-            <Edit2 size={16} strokeWidth={1.5} />
-            Editar
+            <Edit2 size={16} strokeWidth={2} />
+            Editar Registro
           </button>
         )}
       </div>

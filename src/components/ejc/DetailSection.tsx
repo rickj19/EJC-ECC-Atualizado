@@ -12,14 +12,16 @@ interface DetailSectionProps {
 export function DetailSection({ title, icon: Icon, children, className }: DetailSectionProps) {
   return (
     <div className={cn(
-      "institutional-card p-6 print:p-4",
+      "institutional-card p-8 print:p-6 bg-white shadow-xl shadow-church-dark/5 border border-church-border/20 rounded-3xl",
       className
     )}>
-      <div className="flex items-center gap-3 mb-6 border-b border-church-border/20 pb-4 print:mb-4 print:pb-2">
-        <Icon size={18} strokeWidth={1.5} className="text-church-gold" />
-        <h3 className="text-lg font-bold text-church-dark tracking-tight print:text-base">{title}</h3>
+      <div className="flex items-center gap-4 mb-8 border-b border-church-border/10 pb-6 print:mb-4 print:pb-3">
+        <div className="w-10 h-10 bg-church-bg rounded-xl flex items-center justify-center text-church-gold print:hidden">
+          <Icon size={20} strokeWidth={1.5} />
+        </div>
+        <h3 className="text-xl font-display font-bold text-church-dark tracking-tight uppercase print:text-base">{title}</h3>
       </div>
-      <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+      <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
         {children}
       </div>
     </div>
@@ -37,11 +39,11 @@ export function DetailItem({ label, value, icon: Icon, fullWidth }: DetailItemPr
   const displayValue = value === true ? 'Sim' : value === false ? 'Não' : value || '-';
   
   return (
-    <div className={cn("space-y-1", fullWidth && "col-span-full")}>
-      <p className="institutional-label">{label}</p>
-      <div className="flex items-start gap-2">
-        {Icon && <Icon size={14} strokeWidth={1.5} className="text-stone-300 mt-0.5 print:hidden shrink-0" />}
-        <p className="text-sm font-medium text-church-dark leading-snug print:text-sm">{displayValue}</p>
+    <div className={cn("space-y-2", fullWidth && "col-span-full")}>
+      <p className="text-[10px] font-bold text-church-brown/40 uppercase tracking-widest">{label}</p>
+      <div className="flex items-start gap-3">
+        {Icon && <Icon size={16} strokeWidth={1.5} className="text-church-gold/40 mt-0.5 print:hidden shrink-0" />}
+        <p className="text-base font-medium text-church-dark leading-relaxed print:text-sm">{displayValue}</p>
       </div>
     </div>
   );
