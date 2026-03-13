@@ -3,7 +3,7 @@ export type UserRole = 'admin' | 'equipe' | 'participante' | 'usuario';
 export interface Profile {
   id: string;
   email: string;
-  full_name: string | null;
+  nome: string | null;
   avatar_url: string | null;
   role: UserRole;
   can_view_jovens: boolean;

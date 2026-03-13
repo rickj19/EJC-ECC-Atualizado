@@ -25,7 +25,7 @@ export default function Dashboard() {
           {getWelcomeMessage()}
         </h1>
         <p className="text-stone-500">
-          {profile?.full_name ? `Olá, ${profile.full_name}. ` : ''}
+          {profile?.nome ? `Olá, ${profile.nome}. ` : ''}
           Aqui está o resumo das atividades do EJC hoje.
         </p>
       </div>

@@ -32,7 +32,7 @@ export function UserForm() {
 
   const [formData, setFormData] = useState({
     email: '',
-    full_name: '',
+    nome: '',
     role: 'usuario' as UserRole,
     can_view_jovens: true,
     can_edit_jovens: false,
@@ -59,7 +59,7 @@ export function UserForm() {
       if (data) {
         setFormData({
           email: data.email,
-          full_name: data.full_name || '',
+          nome: data.nome || '',
           role: data.role,
           can_view_jovens: data.can_view_jovens,
           can_edit_jovens: data.can_edit_jovens,
@@ -87,7 +87,7 @@ export function UserForm() {
         const { error: updateError } = await supabase
           .from('profiles')
           .update({
-            full_name: formData.full_name,
+            nome: formData.nome,
             role: formData.role,
             can_view_jovens: formData.can_view_jovens,
             can_edit_jovens: formData.can_edit_jovens,
@@ -99,35 +99,31 @@ export function UserForm() {
 
         if (updateError) throw updateError;
       } else {
-        // Create new user via signUp
-        // Note: This will create the user in auth.users and the trigger should create the profile
-        // Then we update the profile with the specific permissions
-        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-          email: formData.email,
-          password: formData.password,
-          options: {
-            data: {
-              full_name: formData.full_name
+        // Create new user via Backend Admin API
+        const response = await fetch('/api/admin/create-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            nome: formData.nome,
+            email: formData.email,
+            password: formData.password,
+            role: formData.role,
+            permissions: {
+              can_view_jovens: formData.can_view_jovens,
+              can_edit_jovens: formData.can_edit_jovens,
+              can_create_users: formData.can_create_users,
+              can_manage_permissions: formData.can_manage_permissions,
             }
-          }
+          }),
         });
 
-        if (signUpError) throw signUpError;
-        if (!signUpData.user) throw new Error('Erro ao criar usuário.');
+        const result = await response.json();
 
-        // Update the newly created profile with permissions
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .update({
-            role: formData.role,
-            can_view_jovens: formData.can_view_jovens,
-            can_edit_jovens: formData.can_edit_jovens,
-            can_create_users: formData.can_create_users,
-            can_manage_permissions: formData.can_manage_permissions
-          })
-          .eq('id', signUpData.user.id);
-
-        if (profileError) throw profileError;
+        if (!response.ok) {
+          throw new Error(result.error || 'Erro ao criar usuário no servidor.');
+        }
       }
 
       setSuccess(true);
@@ -195,8 +191,8 @@ export function UserForm() {
                   type="text"
                   required
                   disabled={isViewing}
-                  value={formData.full_name}
-                  onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+                  value={formData.nome}
+                  onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
                   className="w-full pl-12 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium disabled:opacity-70"
                   placeholder="Ex: João Silva"
                 />

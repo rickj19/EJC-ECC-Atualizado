@@ -72,6 +72,71 @@ USING (true);
 
 -- ... (código anterior da tabela jovens)
 
+-- Tabela de Perfis (Profiles)
+CREATE TABLE IF NOT EXISTS public.profiles (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    nome TEXT,
+    email TEXT NOT NULL,
+    avatar_url TEXT,
+    role TEXT DEFAULT 'usuario',
+    can_view_jovens BOOLEAN DEFAULT TRUE,
+    can_edit_jovens BOOLEAN DEFAULT FALSE,
+    can_create_users BOOLEAN DEFAULT FALSE,
+    can_manage_permissions BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Habilitar RLS
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+
+-- Políticas de RLS para profiles
+CREATE POLICY "Usuários podem ver seus próprios perfis"
+ON public.profiles FOR SELECT
+TO authenticated
+USING (auth.uid() = id);
+
+CREATE POLICY "Admins podem ver todos os perfis"
+ON public.profiles FOR SELECT
+TO authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM public.profiles
+    WHERE id = auth.uid() AND role = 'admin'
+  )
+);
+
+CREATE POLICY "Admins podem atualizar perfis"
+ON public.profiles FOR UPDATE
+TO authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM public.profiles
+    WHERE id = auth.uid() AND role = 'admin'
+  )
+);
+
+-- Função para criar perfil automaticamente ao criar usuário no Auth
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO public.profiles (id, nome, email, role)
+    VALUES (
+        NEW.id,
+        COALESCE(NEW.raw_user_meta_data->>'nome', ''),
+        NEW.email,
+        COALESCE(NEW.raw_user_meta_data->>'role', 'usuario')
+    );
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Trigger para novo usuário
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+AFTER INSERT ON auth.users
+FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
 -- Configuração do Storage (Bucket para Fotos)
 -- 1. Criar o bucket
 INSERT INTO storage.buckets (id, name, public)

@@ -76,7 +76,7 @@ export function UserList() {
   };
 
   const filteredUsers = users.filter(user => 
-    user.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.nome?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -152,13 +152,13 @@ export function UserList() {
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-500 font-bold overflow-hidden border border-stone-200">
                           {user.avatar_url ? (
-                            <img src={user.avatar_url} alt={user.full_name || ''} className="w-full h-full object-cover" />
+                            <img src={user.avatar_url} alt={user.nome || ''} className="w-full h-full object-cover" />
                           ) : (
-                            user.full_name?.charAt(0) || user.email.charAt(0).toUpperCase()
+                            user.nome?.charAt(0) || user.email.charAt(0).toUpperCase()
                           )}
                         </div>
                         <div>
-                          <p className="text-sm font-bold text-stone-800">{user.full_name || 'Sem nome'}</p>
+                          <p className="text-sm font-bold text-stone-800">{user.nome || 'Sem nome'}</p>
                           <p className="text-xs text-stone-500">{user.email}</p>
                         </div>
                       </div>

@@ -104,12 +104,12 @@ export function EJCLayout({ children }: EJCLayoutProps) {
               {profile?.avatar_url ? (
                 <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
               ) : (
-                profile?.full_name?.charAt(0) || user?.email?.charAt(0).toUpperCase()
+                profile?.nome?.charAt(0) || user?.email?.charAt(0).toUpperCase()
               )}
             </div>
             <div className="min-w-0">
               <p className="text-sm font-bold text-stone-800 truncate">
-                {profile?.full_name || user?.email?.split('@')[0]}
+                {profile?.nome || user?.email?.split('@')[0]}
               </p>
               <p className="text-[10px] text-stone-500 uppercase font-black tracking-widest truncate">
                 {role || 'Visitante'}
@@ -142,7 +142,7 @@ export function EJCLayout({ children }: EJCLayoutProps) {
 
           <div className="flex items-center gap-4">
             <div className="text-right hidden sm:block">
-              <p className="text-sm font-bold text-stone-800">{profile?.full_name || user?.email?.split('@')[0]}</p>
+              <p className="text-sm font-bold text-stone-800">{profile?.nome || user?.email?.split('@')[0]}</p>
               <p className="text-[10px] text-stone-500 uppercase tracking-wider">{role || 'Visitante'}</p>
             </div>
             <button className="p-2.5 text-stone-500 hover:bg-stone-50 rounded-full transition-colors relative">
