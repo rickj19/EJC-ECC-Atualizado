@@ -122,13 +122,23 @@ export function UserForm() {
           }),
         });
 
-        const result = await response.json();
+        let result;
+        const contentType = response.headers.get("content-type");
+        
+        if (contentType && contentType.includes("application/json")) {
+          result = await response.json();
+        } else {
+          const errorText = await response.text();
+          console.error('[UserForm] Non-JSON response from server:', errorText);
+          throw new Error('O servidor retornou uma resposta inválida (não JSON).');
+        }
 
         if (!response.ok) {
           console.error('[UserForm] Server error:', result.error);
           throw new Error(result.error || 'Erro ao criar usuário no servidor.');
         }
-        console.log('[UserForm] User created successfully:', result.user.id);
+        
+        console.log('[UserForm] User created successfully:', result.user?.id);
       }
 
       setSuccess(true);

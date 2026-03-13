@@ -29,16 +29,22 @@ async function startServer() {
   app.post('/api/admin/create-user', async (req, res) => {
     const { nome, email, password, role, permissions } = req.body;
 
-    console.log(`[API] Creating user: ${email} with role ${role}`);
+    console.log(`[API] Request to create user: ${email}`);
 
-    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
-      console.error('[API] Missing SUPABASE_SERVICE_ROLE_KEY');
-      return res.status(500).json({ error: 'Configuração do servidor incompleta (Service Role Key ausente).' });
+    // Ensure we always return JSON
+    res.setHeader('Content-Type', 'application/json');
+
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY || !process.env.VITE_SUPABASE_URL) {
+      console.error('[API] Missing Supabase configuration');
+      return res.status(500).json({ 
+        success: false,
+        error: 'Configuração do servidor incompleta (Supabase URL ou Service Role Key ausente).' 
+      });
     }
 
     try {
       // 1. Criar usuário no Auth usando Admin API
-      // Passamos os metadados para que o trigger handle_new_user já crie o perfil com os dados básicos
+      console.log('[API] Calling auth.admin.createUser...');
       const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
         email,
         password,
@@ -52,14 +58,25 @@ async function startServer() {
 
       if (authError) {
         console.error('[API] Auth creation error:', authError);
-        throw authError;
+        return res.status(400).json({ 
+          success: false,
+          error: authError.message || 'Erro ao criar usuário no Auth.' 
+        });
+      }
+
+      if (!authData?.user) {
+        console.error('[API] No user data returned from Auth');
+        return res.status(500).json({ 
+          success: false,
+          error: 'Usuário criado mas nenhum dado foi retornado.' 
+        });
       }
 
       const userId = authData.user.id;
       console.log(`[API] Auth user created: ${userId}`);
 
       // 2. Garantir que o perfil existe e tem as permissões corretas
-      // Usamos upsert para garantir que, mesmo que o trigger falhe ou atrase, o perfil seja criado/atualizado
+      console.log('[API] Upserting profile...');
       const { error: upsertError } = await supabaseAdmin
         .from('profiles')
         .upsert({
@@ -73,14 +90,26 @@ async function startServer() {
 
       if (upsertError) {
         console.error('[API] Profile upsert error:', upsertError);
-        throw upsertError;
+        // We don't necessarily want to fail the whole request if Auth succeeded but profile failed,
+        // but for consistency we'll return an error so the admin knows something went wrong.
+        return res.status(500).json({ 
+          success: false,
+          error: `Usuário criado no Auth, mas erro ao salvar perfil: ${upsertError.message}` 
+        });
       }
 
-      console.log(`[API] Profile created/updated for ${userId}`);
-      res.json({ success: true, user: authData.user });
+      console.log(`[API] User ${email} created successfully`);
+      return res.status(200).json({ 
+        success: true, 
+        user: authData.user 
+      });
+
     } catch (err: any) {
-      console.error('[API] Error in create-user:', err);
-      res.status(500).json({ error: err.message || 'Erro ao criar usuário' });
+      console.error('[API] Critical error in create-user:', err);
+      return res.status(500).json({ 
+        success: false,
+        error: err.message || 'Erro interno do servidor ao criar usuário.' 
+      });
     }
   });
 
