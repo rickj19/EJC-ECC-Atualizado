@@ -46,10 +46,12 @@ export function EJCLayout({ children }: EJCLayoutProps) {
   ];
 
   const filteredMenuItems = menuItems.filter(item => {
-    if (!role) return false;
+    // If no role, only show Dashboard as a basic entry point
+    if (!role) {
+      return item.path === '/ejc/dashboard';
+    }
+    
     if (item.permission && !hasPermission(item.permission as any)) {
-      // If it has a permission but user doesn't have it, hide it
-      // UNLESS they are admin (hasPermission handles admin)
       return false;
     }
     return item.roles.includes(role) || role === 'admin';
@@ -110,7 +112,7 @@ export function EJCLayout({ children }: EJCLayoutProps) {
                 {profile?.full_name || user?.email?.split('@')[0]}
               </p>
               <p className="text-[10px] text-stone-500 uppercase font-black tracking-widest truncate">
-                {role || 'Carregando...'}
+                {role || 'Visitante'}
               </p>
             </div>
           </div>
@@ -140,8 +142,8 @@ export function EJCLayout({ children }: EJCLayoutProps) {
 
           <div className="flex items-center gap-4">
             <div className="text-right hidden sm:block">
-              <p className="text-sm font-bold text-stone-800">{user?.email?.split('@')[0]}</p>
-              <p className="text-[10px] text-stone-500 uppercase tracking-wider">Administrador EJC</p>
+              <p className="text-sm font-bold text-stone-800">{profile?.full_name || user?.email?.split('@')[0]}</p>
+              <p className="text-[10px] text-stone-500 uppercase tracking-wider">{role || 'Visitante'}</p>
             </div>
             <button className="p-2.5 text-stone-500 hover:bg-stone-50 rounded-full transition-colors relative">
               <Bell className="w-5 h-5" />
