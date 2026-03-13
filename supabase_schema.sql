@@ -120,12 +120,25 @@ USING (
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO public.profiles (id, nome, email, role)
+    INSERT INTO public.profiles (
+        id, 
+        nome, 
+        email, 
+        role,
+        can_view_jovens,
+        can_edit_jovens,
+        can_create_users,
+        can_manage_permissions
+    )
     VALUES (
         NEW.id,
         COALESCE(NEW.raw_user_meta_data->>'nome', ''),
         NEW.email,
-        COALESCE(NEW.raw_user_meta_data->>'role', 'usuario')
+        COALESCE(NEW.raw_user_meta_data->>'role', 'usuario'),
+        COALESCE((NEW.raw_user_meta_data->>'can_view_jovens')::boolean, TRUE),
+        COALESCE((NEW.raw_user_meta_data->>'can_edit_jovens')::boolean, FALSE),
+        COALESCE((NEW.raw_user_meta_data->>'can_create_users')::boolean, FALSE),
+        COALESCE((NEW.raw_user_meta_data->>'can_manage_permissions')::boolean, FALSE)
     );
     RETURN NEW;
 END;

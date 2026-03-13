@@ -84,6 +84,7 @@ export function UserForm() {
     try {
       if (isEditing) {
         // Update existing profile
+        console.log('[UserForm] Updating user:', id);
         const { error: updateError } = await supabase
           .from('profiles')
           .update({
@@ -98,8 +99,10 @@ export function UserForm() {
           .eq('id', id);
 
         if (updateError) throw updateError;
+        console.log('[UserForm] User updated successfully');
       } else {
         // Create new user via Backend Admin API
+        console.log('[UserForm] Creating new user:', formData.email);
         const response = await fetch('/api/admin/create-user', {
           method: 'POST',
           headers: {
@@ -122,12 +125,17 @@ export function UserForm() {
         const result = await response.json();
 
         if (!response.ok) {
+          console.error('[UserForm] Server error:', result.error);
           throw new Error(result.error || 'Erro ao criar usuário no servidor.');
         }
+        console.log('[UserForm] User created successfully:', result.user.id);
       }
 
       setSuccess(true);
-      setTimeout(() => navigate('/ejc/usuarios'), 2000);
+      // Wait a bit to show success message before navigating
+      setTimeout(() => {
+        navigate('/ejc/usuarios');
+      }, 1500);
     } catch (err: any) {
       console.error('Erro ao salvar usuário:', err);
       setError(err.message || 'Ocorreu um erro ao salvar as alterações.');
@@ -179,6 +187,15 @@ export function UserForm() {
             <div className="p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-3 text-red-700 animate-in fade-in slide-in-from-top-2">
               <AlertCircle size={20} />
               <p className="text-sm font-bold">{error}</p>
+            </div>
+          )}
+
+          {success && (
+            <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-3 text-emerald-700 animate-in fade-in slide-in-from-top-2">
+              <CheckCircle2 size={20} />
+              <p className="text-sm font-bold">
+                {isEditing ? 'Usuário atualizado com sucesso!' : 'Usuário criado com sucesso! Redirecionando...'}
+              </p>
             </div>
           )}
 

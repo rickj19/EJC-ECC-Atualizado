@@ -56,20 +56,23 @@ export function UserList() {
     if (!deleteId) return;
     try {
       setIsDeleting(true);
-      // Nota: No Supabase client-side, você só pode deletar seu próprio usuário auth.
-      // Para deletar outros, precisaria de uma Edge Function com service_role.
-      // Aqui deletamos apenas o perfil para fins de demonstração da UI.
-      const { error } = await supabase
-        .from('profiles')
-        .delete()
-        .eq('id', deleteId);
+      console.log('[UserList] Deleting user:', deleteId);
+      
+      const response = await fetch(`/api/admin/delete-user/${deleteId}`, {
+        method: 'DELETE',
+      });
 
-      if (error) throw error;
+      if (!response.ok) {
+        const result = await response.json();
+        throw new Error(result.error || 'Erro ao excluir usuário no servidor.');
+      }
+
       setUsers(users.filter(u => u.id !== deleteId));
       setDeleteId(null);
-    } catch (err) {
-      console.error('Erro ao excluir perfil:', err);
-      alert('Erro ao excluir perfil. Em produção, use uma Edge Function para remover o usuário do Auth.');
+      console.log('[UserList] User deleted successfully');
+    } catch (err: any) {
+      console.error('[UserList] Error deleting user:', err);
+      alert(err.message || 'Erro ao excluir usuário.');
     } finally {
       setIsDeleting(false);
     }

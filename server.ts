@@ -29,52 +29,81 @@ async function startServer() {
   app.post('/api/admin/create-user', async (req, res) => {
     const { nome, email, password, role, permissions } = req.body;
 
+    console.log(`[API] Creating user: ${email} with role ${role}`);
+
     if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      console.error('[API] Missing SUPABASE_SERVICE_ROLE_KEY');
       return res.status(500).json({ error: 'Configuração do servidor incompleta (Service Role Key ausente).' });
     }
 
     try {
       // 1. Criar usuário no Auth usando Admin API
+      // Passamos os metadados para que o trigger handle_new_user já crie o perfil com os dados básicos
       const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
         email,
         password,
         email_confirm: true,
-        user_metadata: { nome, role }
+        user_metadata: { 
+          nome, 
+          role,
+          ...permissions 
+        }
       });
 
-      if (authError) throw authError;
-
-      const userId = authData.user.id;
-
-      // 2. Atualizar o perfil com as permissões específicas
-      // O trigger handle_new_user deve criar o perfil base, mas garantimos aqui os dados completos
-      const { error: profileError } = await supabaseAdmin
-        .from('profiles')
-        .update({
-          ...permissions,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', userId);
-
-      // Se o update falhar (ex: trigger ainda não rodou), tentamos um upsert
-      if (profileError) {
-        const { error: upsertError } = await supabaseAdmin
-          .from('profiles')
-          .upsert({
-            id: userId,
-            nome,
-            email,
-            role,
-            ...permissions,
-            updated_at: new Date().toISOString()
-          });
-        if (upsertError) throw upsertError;
+      if (authError) {
+        console.error('[API] Auth creation error:', authError);
+        throw authError;
       }
 
+      const userId = authData.user.id;
+      console.log(`[API] Auth user created: ${userId}`);
+
+      // 2. Garantir que o perfil existe e tem as permissões corretas
+      // Usamos upsert para garantir que, mesmo que o trigger falhe ou atrase, o perfil seja criado/atualizado
+      const { error: upsertError } = await supabaseAdmin
+        .from('profiles')
+        .upsert({
+          id: userId,
+          nome,
+          email,
+          role,
+          ...permissions,
+          updated_at: new Date().toISOString()
+        });
+
+      if (upsertError) {
+        console.error('[API] Profile upsert error:', upsertError);
+        throw upsertError;
+      }
+
+      console.log(`[API] Profile created/updated for ${userId}`);
       res.json({ success: true, user: authData.user });
     } catch (err: any) {
-      console.error('Error creating user:', err);
+      console.error('[API] Error in create-user:', err);
       res.status(500).json({ error: err.message || 'Erro ao criar usuário' });
+    }
+  });
+
+  app.delete('/api/admin/delete-user/:id', async (req, res) => {
+    const { id } = req.params;
+    console.log(`[API] Deleting user: ${id}`);
+
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return res.status(500).json({ error: 'Configuração do servidor incompleta.' });
+    }
+
+    try {
+      // 1. Deletar do Auth (isso deve disparar o ON DELETE CASCADE na tabela profiles se configurado)
+      const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(id);
+      if (authError) throw authError;
+
+      // 2. Garantir que o perfil foi removido (caso o cascade falhe ou não esteja configurado)
+      await supabaseAdmin.from('profiles').delete().eq('id', id);
+
+      res.json({ success: true });
+    } catch (err: any) {
+      console.error('[API] Error in delete-user:', err);
+      res.status(500).json({ error: err.message || 'Erro ao excluir usuário' });
     }
   });
 
