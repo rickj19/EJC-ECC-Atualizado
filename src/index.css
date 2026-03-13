@@ -6,16 +6,16 @@
   --font-serif: "Cormorant Garamond", serif;
   --font-display: "Playfair Display", serif;
   
-  --color-church-brown: #5A3F27;
-  --color-church-dark: #2F2216;
-  --color-church-beige: #E7D8C5;
-  --color-church-beige-light: #F4EEE6;
-  --color-church-bg: #F9F6F2;
-  --color-church-gold: #B8914C;
+  --color-church-dark: #3E2A1B;
+  --color-church-brown: #6B4A2B;
+  --color-church-gold: #C89A55;
   --color-church-gold-light: #D4AF37;
-  --color-church-green: #1F6F4A;
-  --color-church-text: #2C2118;
-  --color-church-border: #D9C9B5;
+  --color-church-beige: #E7D8C5;
+  --color-church-beige-light: #F5EFE6;
+  --color-church-bg: #FDFBF9;
+  --color-church-border: #D1C4B2;
+  --color-church-text: #3E2A1B;
+  --color-church-green: #1E8F63;
 }
 
 @layer base {
@@ -29,26 +29,32 @@
 
   /* Custom Scrollbar for Institutional Feel */
   ::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
   }
   ::-webkit-scrollbar-track {
     @apply bg-church-bg;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-church-border rounded-full hover:bg-church-gold transition-colors;
+    @apply bg-church-border rounded-none hover:bg-church-gold transition-colors;
   }
 }
 
 @layer components {
   .paper-card {
-    @apply bg-white border border-church-border shadow-[0_4px_20px_rgba(0,0,0,0.03)] rounded-lg;
+    @apply bg-white border border-church-border shadow-[0_10px_40px_rgba(47,34,22,0.05)] rounded-sm relative;
+  }
+
+  .paper-card::before {
+    content: '';
+    @apply absolute inset-0 opacity-[0.03] pointer-events-none;
+    background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
   }
   
   .institutional-input {
-    @apply w-full px-4 py-3 bg-white border border-church-border rounded-md focus:outline-none focus:ring-1 focus:ring-church-gold focus:border-church-gold transition-all text-church-text placeholder:text-stone-300;
+    @apply w-full bg-church-beige-light/30 border border-church-border rounded-sm px-6 py-4 focus:outline-none focus:ring-1 focus:ring-church-gold focus:border-church-gold transition-all text-church-dark placeholder:text-stone-300 shadow-inner;
   }
 
   .institutional-button-primary {
-    @apply flex items-center justify-center gap-2 px-6 py-3 bg-church-brown text-white font-serif font-bold rounded-md hover:bg-church-dark transition-all shadow-md active:scale-[0.98] disabled:opacity-50;
+    @apply bg-church-brown text-church-beige px-10 py-5 rounded-sm font-black uppercase tracking-[0.4em] text-[11px] hover:bg-church-dark transition-all flex items-center justify-center gap-4 shadow-xl shadow-church-brown/10 active:scale-95 disabled:opacity-50;
   }
 }

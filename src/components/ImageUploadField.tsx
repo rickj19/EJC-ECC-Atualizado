@@ -100,40 +100,40 @@ export function ImageUploadField({
   };
 
   return (
-    <div className={cn('space-y-3', className)}>
+    <div className={cn('space-y-6', className)}>
       {label && (
-        <label className="text-[10px] font-black text-church-gold uppercase tracking-[0.3em] ml-1 block">
+        <label className="text-[12px] font-black text-church-gold uppercase tracking-[0.4em] ml-1 block">
           {label}
         </label>
       )}
 
       <div className="relative">
         {previewUrl ? (
-          <div className="relative group aspect-square w-full max-w-[240px] mx-auto rounded-lg overflow-hidden border-2 border-church-border bg-stone-50 shadow-inner">
+          <div className="relative group aspect-square w-full max-w-[320px] mx-auto rounded-sm overflow-hidden border-2 border-church-border bg-white shadow-2xl p-2">
             <img
               src={previewUrl}
               alt="Preview"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover rounded-sm grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700"
               referrerPolicy="no-referrer"
             />
             
             {/* Overlay de Ações */}
-            <div className="absolute inset-0 bg-church-dark/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
+            <div className="absolute inset-0 bg-church-dark/90 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center gap-6 backdrop-blur-sm">
               <button
                 type="button"
                 onClick={() => triggerUpload()}
-                className="p-3 bg-white/10 border border-white/20 rounded-full text-white hover:bg-white/20 transition-colors shadow-lg backdrop-blur-sm"
-                title="Trocar imagem"
+                className="p-5 bg-white/10 border border-white/20 rounded-sm text-white hover:bg-white/20 transition-all shadow-2xl hover:scale-110 active:scale-95"
+                title="Substituir Fotografia"
               >
-                <Upload size={20} strokeWidth={1.5} />
+                <Upload size={24} strokeWidth={1.2} />
               </button>
               <button
                 type="button"
                 onClick={handleRemove}
-                className="p-3 bg-red-500/80 border border-red-400/50 rounded-full text-white hover:bg-red-600 transition-colors shadow-lg backdrop-blur-sm"
-                title="Remover imagem"
+                className="p-5 bg-red-500/20 border border-red-500/40 rounded-sm text-red-200 hover:bg-red-500/40 transition-all shadow-2xl hover:scale-110 active:scale-95"
+                title="Remover Fotografia"
               >
-                <X size={20} strokeWidth={1.5} />
+                <X size={24} strokeWidth={1.2} />
               </button>
             </div>
 
@@ -141,29 +141,32 @@ export function ImageUploadField({
             <button
               type="button"
               onClick={handleRemove}
-              className="absolute top-3 right-3 p-2 bg-red-500 rounded-full text-white md:hidden shadow-xl"
+              className="absolute top-4 right-4 p-3 bg-red-600 rounded-sm text-white md:hidden shadow-2xl border border-white/20"
             >
-              <X size={16} />
+              <X size={20} strokeWidth={2} />
             </button>
           </div>
         ) : (
           <div 
             onClick={() => triggerUpload()}
             className={cn(
-              "aspect-square w-full max-w-[240px] mx-auto rounded-lg border-2 border-dashed flex flex-col items-center justify-center gap-4 cursor-pointer transition-all",
-              error ? "border-red-300 bg-red-50/50 text-red-500" : "border-church-border bg-stone-50/50 text-stone-400 hover:border-church-gold hover:bg-white hover:shadow-xl hover:shadow-church-gold/5"
+              "aspect-square w-full max-w-[320px] mx-auto rounded-sm border-2 border-dashed flex flex-col items-center justify-center gap-6 cursor-pointer transition-all duration-700",
+              error ? "border-red-300 bg-red-50/50 text-red-500" : "border-church-border bg-church-beige-light/30 text-stone-400 hover:border-church-gold hover:bg-white hover:shadow-2xl hover:shadow-church-gold/10"
             )}
           >
             {uploading ? (
-              <Loader2 className="animate-spin text-church-gold" size={40} />
+              <div className="flex flex-col items-center gap-4">
+                <Loader2 className="animate-spin text-church-gold" size={48} />
+                <span className="text-[10px] font-black text-church-gold uppercase tracking-[0.4em]">Processando...</span>
+              </div>
             ) : (
               <>
-                <div className="p-4 bg-white rounded-xl shadow-sm border border-church-border">
-                  <ImageIcon size={32} strokeWidth={1} className="text-church-gold" />
+                <div className="p-6 bg-white rounded-sm shadow-xl border border-church-border group-hover:border-church-gold transition-colors">
+                  <ImageIcon size={40} strokeWidth={1} className="text-church-gold" />
                 </div>
-                <div className="text-center px-6">
-                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-church-dark">Anexar Fotografia</p>
-                  <p className="text-[9px] font-bold text-stone-400 uppercase tracking-[0.2em] mt-2 font-serif italic">Formatos JPG/PNG até 5MB</p>
+                <div className="text-center px-8">
+                  <p className="text-[11px] font-black uppercase tracking-[0.4em] text-church-dark">Anexar Fotografia Oficial</p>
+                  <p className="text-[10px] font-bold text-stone-400 uppercase tracking-[0.3em] mt-3 font-serif italic">Formatos JPG/PNG até 5MB</p>
                 </div>
               </>
             )}
@@ -172,31 +175,34 @@ export function ImageUploadField({
 
         {/* Botões Rápidos (Apenas se não houver imagem ou estiver enviando) */}
         {!previewUrl && !uploading && (
-          <div className="flex justify-center gap-4 mt-8">
+          <div className="flex justify-center gap-6 mt-10">
             <button
               type="button"
               onClick={() => triggerUpload(true)}
-              className="flex items-center gap-3 px-8 py-3 bg-church-dark text-church-beige-light rounded-md text-[10px] font-black uppercase tracking-[0.3em] hover:bg-church-brown transition-all shadow-md active:scale-95"
+              className="flex items-center gap-4 px-10 py-4 bg-church-dark text-church-beige-light rounded-sm text-[11px] font-black uppercase tracking-[0.4em] hover:bg-church-brown transition-all shadow-xl active:scale-95 border border-white/10"
             >
-              <Camera size={16} strokeWidth={1.5} />
-              Câmera
+              <Camera size={20} strokeWidth={1.2} />
+              Capturar Câmera
             </button>
             <button
               type="button"
               onClick={() => triggerUpload(false)}
-              className="flex items-center gap-3 px-8 py-3 bg-white border border-church-border text-church-dark rounded-md text-[10px] font-black uppercase tracking-[0.3em] hover:bg-stone-50 transition-all shadow-sm active:scale-95"
+              className="flex items-center gap-4 px-10 py-4 bg-white border border-church-border text-church-dark rounded-sm text-[11px] font-black uppercase tracking-[0.4em] hover:bg-stone-50 transition-all shadow-md active:scale-95"
             >
-              <Upload size={16} strokeWidth={1.5} />
-              Arquivo
+              <Upload size={20} strokeWidth={1.2} />
+              Selecionar Arquivo
             </button>
           </div>
         )}
 
         {uploading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/80 rounded-lg backdrop-blur-sm">
-            <div className="flex flex-col items-center gap-3">
-              <Loader2 className="animate-spin text-church-gold" size={32} />
-              <span className="text-[10px] font-black text-church-dark uppercase tracking-[0.3em]">Processando...</span>
+          <div className="absolute inset-0 flex items-center justify-center bg-white/90 rounded-sm backdrop-blur-md border-2 border-church-gold/20">
+            <div className="flex flex-col items-center gap-5">
+              <Loader2 className="animate-spin text-church-gold" size={48} />
+              <div className="text-center">
+                <span className="text-[11px] font-black text-church-dark uppercase tracking-[0.5em] block">Processando</span>
+                <span className="text-[9px] font-bold text-church-gold uppercase tracking-[0.3em] mt-1 block">Arquivo Digital</span>
+              </div>
             </div>
           </div>
         )}

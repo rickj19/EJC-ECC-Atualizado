@@ -49,8 +49,6 @@ export default function Login() {
       });
 
       if (authError) throw authError;
-      
-      // Navigation is handled by the useEffect above
     } catch (err: any) {
       setError(err.message || 'Erro ao fazer login. Verifique suas credenciais.');
     } finally {
@@ -59,96 +57,77 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-church-bg flex flex-col font-sans text-church-text">      {/* Institutional Top Header */}
-      <header className="bg-white border-b border-church-border py-8 px-12 shadow-sm z-20">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-8">
-            <div className="w-16 h-16 bg-church-dark rounded flex items-center justify-center shadow-lg border border-white/10">
-              <Church className="w-9 h-9 text-church-gold" strokeWidth={1.5} />
-            </div>
-            <div>
-              <h1 className="text-3xl font-display font-bold text-church-dark leading-tight tracking-tight">
-                Paróquia São Francisco de Assis
-              </h1>
-              <div className="flex items-center gap-3 mt-1">
-                <span className="text-[11px] uppercase tracking-[0.4em] font-black text-church-gold">Chancelaria</span>
-                <div className="w-1 h-1 bg-church-border rounded-full" />
-                <span className="text-[11px] uppercase tracking-[0.4em] font-black text-church-gold">Arquivo Paroquial</span>
+    <div className="min-h-screen relative flex items-center justify-center p-6 overflow-hidden">
+      {/* Background Image with Overlay */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center z-0 scale-105 animate-slow-zoom"
+        style={{ 
+          backgroundImage: 'url("https://images.unsplash.com/photo-1518101645466-7795885ff8f8?q=80&w=1920&auto=format&fit=crop")',
+        }}
+      />
+      <div className="absolute inset-0 bg-church-dark/60 backdrop-blur-[2px] z-10" />
+      
+      {/* Decorative Light Leak */}
+      <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-church-gold/20 via-transparent to-transparent z-15 pointer-events-none" />
+
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+        className="relative z-20 w-full max-w-[480px]"
+      >
+        {/* Login Card */}
+        <div className="bg-church-beige-light rounded-2xl shadow-[0_30px_100px_rgba(0,0,0,0.4)] overflow-hidden border border-white/20">
+          {/* Card Header (Dark Brown) */}
+          <div className="bg-church-dark p-10 text-center relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-church-gold" />
+            <div className="relative z-10 flex flex-col items-center">
+              <div className="w-16 h-16 bg-church-gold/10 rounded-full flex items-center justify-center mb-6 border border-church-gold/20">
+                <Church className="w-8 h-8 text-church-gold" strokeWidth={1.5} />
+              </div>
+              <h1 className="text-3xl font-display font-bold text-white tracking-tight">Sistema EJC</h1>
+              <p className="text-church-gold text-[11px] uppercase tracking-[0.4em] font-black mt-2">Paróquia São Francisco de Assis</p>
+              <div className="flex items-center gap-3 mt-4">
+                <div className="h-px w-8 bg-church-gold/30" />
+                <span className="text-[10px] uppercase tracking-[0.2em] text-church-beige/60 font-medium italic">Gestão Pastoral</span>
+                <div className="h-px w-8 bg-church-gold/30" />
               </div>
             </div>
-          </div>
-          <div className="hidden md:block text-right">
-            <p className="text-[10px] font-black text-stone-400 uppercase tracking-[0.3em]">Secretaria Administrativa</p>
-            <p className="text-base font-serif italic text-church-brown mt-1">Pax et Bonum</p>
-          </div>
-        </div>
-      </header>
-
-      <main className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 relative overflow-hidden bg-[#FDFBF9]">
-        {/* Subtle Background Texture */}
-        <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')]" />
-        
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          className="w-full max-w-6xl paper-card overflow-hidden flex flex-col md:flex-row min-h-[650px] shadow-[0_20px_50px_rgba(47,34,22,0.1)]"
-        >
-          {/* Left Side: Church Banner (Institutional) */}
-          <div className="md:w-1/2 relative min-h-[300px] md:min-h-full border-r border-church-border">
-            <div 
-              className="absolute inset-0 bg-cover bg-center grayscale-[0.2] scale-105"
-              style={{ 
-                backgroundImage: 'url("https://images.unsplash.com/photo-1548625361-195fe57724e0?q=80&w=1200&auto=format&fit=crop")',
-              }}
-            />
-            <div className="absolute inset-0 bg-church-dark/70 backdrop-brightness-75" />
-            <div className="absolute inset-0 bg-gradient-to-t from-church-dark via-church-dark/40 to-transparent" />
-            
-            <div className="absolute bottom-16 left-16 right-16 text-white">
-              <div className="w-16 h-1.5 bg-church-gold mb-10" />
-              <h2 className="text-5xl font-display font-bold mb-6 tracking-tight leading-tight">Sistema de Gestão Pastoral EJC</h2>
-              <p className="text-xl font-serif italic text-church-beige leading-relaxed opacity-90 max-w-md">
-                "Onde dois ou três estiverem reunidos em meu nome, ali estou eu no meio deles."
-              </p>
-              <div className="flex items-center gap-4 mt-12">
-                <div className="h-px w-12 bg-church-gold/50" />
-                <p className="text-[10px] uppercase tracking-[0.4em] font-black text-church-gold-light">Versão Administrativa 2.0</p>
-              </div>
-            </div>
+            {/* Subtle Texture Overlay */}
+            <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')]" />
           </div>
 
-          {/* Right Side: Login Form (Administrative) */}
-          <div className="md:w-1/2 bg-white p-12 md:p-24 flex flex-col justify-center">
-            <div className="mb-16">
-              <h3 className="text-4xl font-display font-bold text-church-dark mb-4 tracking-tight">Autenticação de Oficial</h3>
-              <p className="text-stone-500 font-serif text-xl italic leading-relaxed">Acesse o terminal de registros e assentamentos paroquiais.</p>
-            </div>
-
-            {/* Module Selector (Sober/Institutional) */}
-            <div className="flex gap-12 border-b border-church-border mb-12">
+          <div className="p-10 md:p-12">
+            {/* Module Selector */}
+            <div className="flex justify-center gap-12 mb-10 border-b border-church-border/30">
               <button
                 onClick={() => setModule('EJC')}
                 className={cn(
-                  "pb-6 text-[11px] font-black uppercase tracking-[0.3em] transition-all border-b-2 -mb-px relative",
+                  "pb-4 text-[11px] font-black uppercase tracking-[0.3em] transition-all relative",
                   module === 'EJC' 
-                    ? "border-church-brown text-church-brown" 
-                    : "border-transparent text-stone-300 hover:text-stone-500"
+                    ? "text-church-brown" 
+                    : "text-stone-400 hover:text-stone-600"
                 )}
               >
-                Módulo EJC
-                {module === 'EJC' && <motion.div layoutId="active-mod" className="absolute bottom-0 left-0 right-0 h-0.5 bg-church-brown" />}
+                EJC
+                {module === 'EJC' && (
+                  <motion.div 
+                    layoutId="active-tab" 
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-church-gold" 
+                  />
+                )}
               </button>
               <button
                 onClick={() => setModule('ECC')}
                 className={cn(
-                  "pb-6 text-[11px] font-black uppercase tracking-[0.3em] transition-all border-b-2 -mb-px opacity-40 cursor-not-allowed",
+                  "pb-4 text-[11px] font-black uppercase tracking-[0.3em] transition-all relative opacity-50 cursor-not-allowed",
                   module === 'ECC' 
-                    ? "border-church-brown text-church-brown" 
-                    : "border-transparent text-stone-300"
+                    ? "text-church-brown" 
+                    : "text-stone-400"
                 )}
               >
-                Módulo ECC
+                ECC
+                <span className="absolute -top-4 -right-8 text-[8px] bg-church-gold/20 text-church-gold px-1.5 py-0.5 rounded-full font-bold">BREVE</span>
               </button>
             </div>
 
@@ -156,56 +135,55 @@ export default function Login() {
               {module === 'EJC' ? (
                 <motion.form
                   key="ejc-form"
-                  initial={{ opacity: 0, x: 20 }}
+                  initial={{ opacity: 0, x: 10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.5 }}
+                  exit={{ opacity: 0, x: -10 }}
                   onSubmit={handleSubmit(onSubmit)}
-                  className="space-y-10"
+                  className="space-y-8"
                 >
-                  <div className="space-y-4">
-                    <label className="block text-[10px] font-black text-stone-400 uppercase tracking-[0.3em] ml-1">
-                      Credencial de E-mail
+                  <div className="space-y-3">
+                    <label className="block text-[10px] font-black text-church-brown uppercase tracking-[0.2em] ml-1">
+                      E-mail Institucional
                     </label>
                     <div className="relative group">
-                      <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-300 group-focus-within:text-church-gold transition-colors" strokeWidth={1.5} />
+                      <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 group-focus-within:text-church-gold transition-colors" strokeWidth={1.5} />
                       <input
                         {...register('email')}
                         type="email"
-                        placeholder="oficial@paroquia.org"
+                        placeholder="exemplo@paroquia.org"
                         className={cn(
-                          "institutional-input pl-14 py-4 text-lg font-serif italic",
+                          "institutional-input pl-14 py-4 text-base font-serif italic bg-white/50",
                           errors.email && "border-red-300 bg-red-50/30"
                         )}
                       />
                     </div>
-                    {errors.email && <p className="text-red-700 text-[10px] font-bold mt-2 ml-1 uppercase tracking-widest">{errors.email.message}</p>}
+                    {errors.email && <p className="text-red-600 text-[9px] font-bold mt-1 ml-1 uppercase tracking-widest">{errors.email.message}</p>}
                   </div>
 
-                  <div className="space-y-4">
-                    <label className="block text-[10px] font-black text-stone-400 uppercase tracking-[0.3em] ml-1">
+                  <div className="space-y-3">
+                    <label className="block text-[10px] font-black text-church-brown uppercase tracking-[0.2em] ml-1">
                       Senha de Acesso
                     </label>
                     <div className="relative group">
-                      <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-300 group-focus-within:text-church-gold transition-colors" strokeWidth={1.5} />
+                      <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 group-focus-within:text-church-gold transition-colors" strokeWidth={1.5} />
                       <input
                         {...register('password')}
                         type="password"
                         placeholder="••••••••"
                         className={cn(
-                          "institutional-input pl-14 py-4 text-lg",
+                          "institutional-input pl-14 py-4 text-base bg-white/50",
                           errors.password && "border-red-300 bg-red-50/30"
                         )}
                       />
                     </div>
-                    {errors.password && <p className="text-red-700 text-[10px] font-bold mt-2 ml-1 uppercase tracking-widest">{errors.password.message}</p>}
+                    {errors.password && <p className="text-red-600 text-[9px] font-bold mt-1 ml-1 uppercase tracking-widest">{errors.password.message}</p>}
                   </div>
 
                   {error && (
                     <motion.div 
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="p-5 bg-red-50 border border-red-100 rounded text-red-800 text-[11px] font-bold text-center uppercase tracking-[0.2em]"
+                      className="p-4 bg-red-50 border border-red-100 rounded-lg text-red-800 text-[10px] font-bold text-center uppercase tracking-[0.1em]"
                     >
                       {error}
                     </motion.div>
@@ -214,53 +192,47 @@ export default function Login() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full institutional-button-primary py-5 shadow-xl shadow-church-brown/10 uppercase tracking-[0.4em] text-[11px] mt-4"
+                    className="w-full bg-church-green text-white py-5 rounded-xl font-black uppercase tracking-[0.3em] text-[11px] shadow-lg shadow-church-green/20 hover:bg-emerald-800 transition-all flex items-center justify-center gap-4 active:scale-[0.98] disabled:opacity-50"
                   >
-                    {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : (
+                    {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
                       <>
-                        Validar Credenciais
-                        <ArrowRight className="w-5 h-5" strokeWidth={1.5} />
+                        Entrar no Sistema
+                        <ArrowRight className="w-4 h-4" strokeWidth={2} />
                       </>
                     )}
                   </button>
                 </motion.form>
               ) : (
-                <motion.div
-                  key="ecc-placeholder"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="py-20 text-center border border-dashed border-church-border rounded bg-stone-50/50"
-                >
-                  <div className="w-24 h-24 bg-white border border-church-border rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
-                    <Heart className="w-12 h-12 text-stone-200" strokeWidth={1} />
-                  </div>
-                  <h3 className="text-church-dark font-display text-2xl font-bold tracking-tight">Arquivo ECC</h3>
-                  <p className="text-stone-400 font-serif italic text-lg mt-4 max-w-[320px] mx-auto leading-relaxed">
-                    O módulo de gestão do Encontro de Casais com Cristo está em fase de catalogação e assentamento.
-                  </p>
-                </motion.div>
+                <div className="py-12 text-center">
+                  <Heart className="w-12 h-12 text-stone-200 mx-auto mb-6" strokeWidth={1} />
+                  <p className="text-stone-400 font-serif italic text-lg">Módulo ECC em breve...</p>
+                </div>
               )}
             </AnimatePresence>
           </div>
-        </motion.div>
-      </main>
-
-      {/* Institutional Footer */}
-      <footer className="bg-white border-t border-church-border py-12 px-12">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
-          <div className="text-center md:text-left">
-            <p className="text-[11px] font-black text-church-dark uppercase tracking-[0.3em] mb-3">Secretaria da Paróquia São Francisco de Assis</p>
-            <p className="text-[10px] text-stone-400 uppercase tracking-[0.3em] font-medium">Sistema de Assentamentos e Registros Pastorais &copy; {new Date().getFullYear()}</p>
-          </div>
-          <div className="flex items-center gap-10">
-            <div className="h-12 w-px bg-church-border hidden md:block" />
-            <p className="text-base font-serif italic text-stone-400 max-w-[300px] text-center md:text-right leading-relaxed">
-              "Senhor, fazei-me instrumento de vossa paz. Onde houver ódio, que eu leve o amor."
-            </p>
-          </div>
         </div>
-      </footer>
+
+        {/* Footer Info */}
+        <div className="mt-12 text-center">
+          <p className="text-[10px] text-white/60 uppercase tracking-[0.4em] font-medium">
+            &copy; {new Date().getFullYear()} Paróquia São Francisco de Assis
+          </p>
+          <p className="text-[9px] text-church-gold/60 uppercase tracking-[0.2em] mt-2 font-bold italic">
+            "Pax et Bonum"
+          </p>
+        </div>
+      </motion.div>
+
+      <style>{`
+        @keyframes slow-zoom {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.1); }
+          100% { transform: scale(1); }
+        }
+        .animate-slow-zoom {
+          animation: slow-zoom 30s infinite ease-in-out;
+        }
+      `}</style>
     </div>
   );
 }

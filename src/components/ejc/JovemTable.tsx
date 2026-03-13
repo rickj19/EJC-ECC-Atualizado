@@ -8,7 +8,8 @@ import {
   AlertCircle,
   ChevronLeft,
   ChevronRight,
-  ArrowUpDown
+  ArrowUpDown,
+  MapPin
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { Jovem } from '../../types/jovem';
@@ -47,70 +48,70 @@ export function JovemTable({
   const SortButton = ({ field, label }: { field: string, label: string }) => (
     <button 
       onClick={() => onSort(field)}
-      className="flex items-center gap-2 hover:text-church-brown transition-colors group/sort"
+      className="flex items-center gap-3 hover:text-church-brown transition-colors group/sort"
     >
       {label}
-      <ArrowUpDown size={12} className={cn(sortBy === field ? "text-church-brown" : "text-stone-300 group-hover/sort:text-stone-400")} />
+      <ArrowUpDown size={14} className={cn(sortBy === field ? "text-church-brown" : "text-stone-300 group-hover/sort:text-stone-400")} />
     </button>
   );
 
   return (
-    <div className="paper-card overflow-hidden">
+    <div className="paper-card overflow-hidden border-church-border/40 shadow-2xl">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-church-bg/10 border-b border-church-border/30">
-              <th className="px-10 py-8 text-[10px] font-black text-church-gold uppercase tracking-[0.3em] border-r border-church-border/10 last:border-r-0">Foto</th>
-              <th className="px-10 py-8 text-[10px] font-black text-church-gold uppercase tracking-[0.3em] border-r border-church-border/10 last:border-r-0">
-                <SortButton field="nome_completo" label="Nome Completo" />
+            <tr className="bg-church-beige-light/50 border-b border-church-border">
+              <th className="px-12 py-8 text-[11px] font-black text-church-gold uppercase tracking-[0.5em] border-r border-church-border/10 last:border-r-0 w-32">Oficial</th>
+              <th className="px-12 py-8 text-[11px] font-black text-church-gold uppercase tracking-[0.5em] border-r border-church-border/10 last:border-r-0">
+                <SortButton field="nome_completo" label="Identificação do Jovem" />
               </th>
-              <th className="px-10 py-8 text-[10px] font-black text-church-gold uppercase tracking-[0.3em] border-r border-church-border/10 last:border-r-0">Nome Social</th>
-              <th className="px-10 py-8 text-[10px] font-black text-church-gold uppercase tracking-[0.3em] border-r border-church-border/10 last:border-r-0">Localidade</th>
-              <th className="px-10 py-8 text-[10px] font-black text-church-gold uppercase tracking-[0.3em] border-r border-church-border/10 last:border-r-0">Contato</th>
-              <th className="px-10 py-8 text-[10px] font-black text-church-gold uppercase tracking-[0.3em] border-r border-church-border/10 last:border-r-0 text-center">Vínculo EJC</th>
-              <th className="px-10 py-8 text-[10px] font-black text-church-gold uppercase tracking-[0.3em] border-r border-church-border/10 last:border-r-0">Pastoral</th>
-              <th className="px-10 py-8 text-[10px] font-black text-church-gold uppercase tracking-[0.3em] text-right">Ações</th>
+              <th className="px-12 py-8 text-[11px] font-black text-church-gold uppercase tracking-[0.5em] border-r border-church-border/10 last:border-r-0">Localidade</th>
+              <th className="px-12 py-8 text-[11px] font-black text-church-gold uppercase tracking-[0.5em] border-r border-church-border/10 last:border-r-0">Contato</th>
+              <th className="px-12 py-8 text-[11px] font-black text-church-gold uppercase tracking-[0.5em] border-r border-church-border/10 last:border-r-0 text-center">Vínculo EJC</th>
+              <th className="px-12 py-8 text-[11px] font-black text-church-gold uppercase tracking-[0.5em] border-r border-church-border/10 last:border-r-0">Pastoral</th>
+              <th className="px-12 py-8 text-[11px] font-black text-church-gold uppercase tracking-[0.5em] text-right">Ações</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-church-border/10">
             {jovens.length > 0 ? (
               jovens.map((jovem) => (
-                <tr key={jovem.id} className="hover:bg-church-bg/5 transition-colors group">
-                  <td className="px-10 py-7 border-r border-church-border/5 last:border-r-0">
-                    <div className="w-16 h-16 rounded bg-church-beige-light overflow-hidden border border-church-border/30 flex-shrink-0 shadow-inner">
+                <tr key={jovem.id} className="hover:bg-church-beige-light/20 transition-all group">
+                  <td className="px-12 py-10 border-r border-church-border/5 last:border-r-0">
+                    <div className="w-20 h-20 rounded-sm bg-white overflow-hidden border border-church-border/30 flex-shrink-0 shadow-inner p-1 group-hover:border-church-gold transition-colors">
                       {jovem.foto_url ? (
                         <img 
                           src={jovem.foto_url} 
                           alt={jovem.nome_completo} 
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover rounded-sm grayscale-[0.3] group-hover:grayscale-0 transition-all"
                           referrerPolicy="no-referrer"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-church-dark/20">
-                          <User size={32} strokeWidth={1} />
+                          <User size={40} strokeWidth={1} />
                         </div>
                       )}
                     </div>
                   </td>
-                  <td className="px-10 py-7 border-r border-church-border/5 last:border-r-0">
-                    <p className="text-lg font-bold text-church-dark font-display tracking-tight leading-tight">{jovem.nome_completo}</p>
-                    <p className="text-[10px] text-stone-400 uppercase font-black tracking-[0.2em] mt-1.5 flex items-center gap-2">
-                      <span className="w-1 h-1 rounded-full bg-church-gold/40" />
+                  <td className="px-12 py-10 border-r border-church-border/5 last:border-r-0">
+                    <p className="text-2xl font-bold text-church-dark font-display tracking-tight leading-tight group-hover:text-church-brown transition-colors">{jovem.nome_completo}</p>
+                    <p className="text-[11px] text-stone-400 uppercase font-black tracking-[0.3em] mt-3 flex items-center gap-3">
+                      <span className="w-1.5 h-1.5 rounded-full bg-church-gold/40" />
                       Assentamento: {new Date(jovem.created_at).toLocaleDateString('pt-BR')}
                     </p>
+                    <p className="text-base text-church-gold font-serif italic mt-2">{jovem.nome_chamado || 'Sem alcunha oficial'}</p>
                   </td>
-                  <td className="px-10 py-7 border-r border-church-border/5 last:border-r-0">
-                    <p className="text-base text-stone-600 font-serif italic">{jovem.nome_chamado || '-'}</p>
+                  <td className="px-12 py-10 border-r border-church-border/5 last:border-r-0">
+                    <div className="flex items-center gap-3 text-stone-600">
+                      <MapPin size={16} className="text-church-gold" />
+                      <span className="text-lg font-medium tracking-tight">{jovem.bairro || 'Não catalogado'}</span>
+                    </div>
                   </td>
-                  <td className="px-10 py-7 border-r border-church-border/5 last:border-r-0">
-                    <p className="text-base text-stone-600 font-medium tracking-tight">{jovem.bairro || '-'}</p>
+                  <td className="px-12 py-10 border-r border-church-border/5 last:border-r-0">
+                    <p className="text-lg text-stone-600 font-mono tracking-tighter">{jovem.contato}</p>
                   </td>
-                  <td className="px-10 py-7 border-r border-church-border/5 last:border-r-0">
-                    <p className="text-base text-stone-600 font-mono tracking-tighter">{jovem.contato}</p>
-                  </td>
-                  <td className="px-10 py-7 border-r border-church-border/5 last:border-r-0 text-center">
+                  <td className="px-12 py-10 border-r border-church-border/5 last:border-r-0 text-center">
                     <span className={cn(
-                      "inline-flex items-center px-5 py-2 rounded text-[9px] font-black uppercase tracking-[0.25em] border transition-all",
+                      "inline-flex items-center px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all",
                       jovem.vivenciou_ejc 
                         ? "bg-church-brown/10 text-church-brown border-church-brown/30 shadow-sm" 
                         : "bg-stone-50 text-stone-400 border-stone-200"
@@ -118,36 +119,36 @@ export function JovemTable({
                       {jovem.vivenciou_ejc ? 'Vivenciou' : 'Não Consta'}
                     </span>
                   </td>
-                  <td className="px-10 py-7 border-r border-church-border/5 last:border-r-0">
-                    <p className="text-base text-stone-600 truncate max-w-[180px] font-serif italic" title={jovem.qual_pastoral || ''}>
+                  <td className="px-12 py-10 border-r border-church-border/5 last:border-r-0">
+                    <p className="text-lg text-stone-600 truncate max-w-[200px] font-serif italic" title={jovem.qual_pastoral || ''}>
                       {jovem.membro_pastoral ? (jovem.qual_pastoral || 'Sim') : 'Nenhuma'}
                     </p>
                   </td>
-                  <td className="px-10 py-7 text-right">
-                    <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                  <td className="px-12 py-10 text-right">
+                    <div className="flex items-center justify-end gap-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
                       <button
                         onClick={() => onView(jovem.id)}
-                        className="p-3 text-stone-400 hover:text-church-dark hover:bg-stone-100 rounded border border-transparent hover:border-church-border/30 transition-all"
+                        className="p-4 bg-white border border-church-border rounded-sm text-church-gold hover:text-church-brown hover:border-church-brown hover:shadow-xl transition-all"
                         title="Visualizar Prontuário"
                       >
-                        <Eye size={20} strokeWidth={1.5} />
+                        <Eye size={22} strokeWidth={1.2} />
                       </button>
                       {hasPermission('can_edit_jovens') && (
                         <button
                           onClick={() => onEdit(jovem.id)}
-                          className="p-3 text-stone-400 hover:text-church-gold hover:bg-church-gold/5 rounded border border-transparent hover:border-church-gold/20 transition-all"
+                          className="p-4 bg-white border border-church-border rounded-sm text-church-gold hover:text-church-brown hover:border-church-brown hover:shadow-xl transition-all"
                           title="Retificar Registro"
                         >
-                          <Edit2 size={20} strokeWidth={1.5} />
+                          <Edit2 size={22} strokeWidth={1.2} />
                         </button>
                       )}
                       {role === 'admin' && (
                         <button
                           onClick={() => onDelete(jovem.id)}
-                          className="p-3 text-stone-400 hover:text-red-600 hover:bg-red-50 rounded border border-transparent hover:border-red-200 transition-all"
+                          className="p-4 bg-white border border-church-border rounded-sm text-red-300 hover:text-red-600 hover:border-red-600 hover:shadow-xl transition-all"
                           title="Remover do Arquivo"
                         >
-                          <Trash2 size={20} strokeWidth={1.5} />
+                          <Trash2 size={22} strokeWidth={1.2} />
                         </button>
                       )}
                     </div>
@@ -156,12 +157,14 @@ export function JovemTable({
               ))
             ) : (
               <tr>
-                <td colSpan={8} className="px-10 py-32 text-center">
-                  <div className="flex flex-col items-center gap-8 text-stone-300">
-                    <AlertCircle size={72} strokeWidth={1} />
-                    <div className="space-y-4">
-                      <p className="text-3xl font-display font-bold text-stone-400 tracking-tight">Nenhum registro localizado</p>
-                      <p className="text-lg text-stone-300 font-serif italic">A consulta aos arquivos da secretaria não retornou resultados para os critérios informados.</p>
+                <td colSpan={8} className="px-12 py-48 text-center">
+                  <div className="flex flex-col items-center gap-10 text-stone-300">
+                    <div className="w-24 h-24 bg-church-beige-light rounded-full flex items-center justify-center text-church-gold border border-church-border shadow-inner">
+                      <AlertCircle size={48} strokeWidth={1} />
+                    </div>
+                    <div className="space-y-6">
+                      <p className="text-4xl font-display font-bold text-stone-400 tracking-tight">Nenhum registro localizado</p>
+                      <p className="text-xl text-stone-300 font-serif italic">A consulta aos arquivos da secretaria não retornou resultados para os critérios informados.</p>
                     </div>
                   </div>
                 </td>
@@ -173,33 +176,33 @@ export function JovemTable({
 
       {/* Paginação */}
       {totalPages > 1 && (
-        <div className="px-12 py-10 bg-church-bg/10 border-t border-church-border/30 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="flex items-center gap-4">
-            <div className="w-1 h-10 bg-church-gold/30 rounded-full" />
-            <p className="text-[11px] font-black text-stone-400 uppercase tracking-[0.3em]">
+        <div className="px-16 py-12 bg-church-beige-light/30 border-t border-church-border flex flex-col md:flex-row items-center justify-between gap-10">
+          <div className="flex items-center gap-6">
+            <div className="w-1.5 h-12 bg-church-gold/40 rounded-full" />
+            <p className="text-[12px] font-black text-stone-400 uppercase tracking-[0.4em]">
               Exibindo <span className="text-church-dark font-bold">{jovens.length}</span> de <span className="text-church-dark font-bold">{totalCount}</span> assentamentos paroquiais
             </p>
           </div>
           
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-8">
             <button
               onClick={() => onPageChange(page - 1)}
               disabled={page === 1}
-              className="p-4 rounded border border-church-border/30 bg-white text-stone-400 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-50 transition-all shadow-sm hover:shadow-md"
+              className="p-5 rounded-sm border border-church-border bg-white text-stone-400 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-50 transition-all shadow-sm hover:shadow-xl active:scale-95"
             >
-              <ChevronLeft size={20} strokeWidth={1.5} />
+              <ChevronLeft size={24} strokeWidth={1.2} />
             </button>
             
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
                 <button
                   key={p}
                   onClick={() => onPageChange(p)}
                   className={cn(
-                    "w-14 h-14 rounded border text-[11px] font-black uppercase tracking-widest transition-all duration-300",
+                    "w-16 h-16 rounded-sm border text-[12px] font-black uppercase tracking-widest transition-all duration-300",
                     page === p 
-                      ? "bg-church-dark border-church-dark text-white shadow-2xl shadow-church-dark/30 scale-110 z-10" 
-                      : "bg-white border-church-border/30 text-stone-400 hover:bg-stone-50 hover:border-church-border"
+                      ? "bg-church-dark border-church-dark text-white shadow-2xl scale-110 z-10" 
+                      : "bg-white border-church-border text-stone-400 hover:bg-stone-50 hover:border-church-gold"
                   )}
                 >
                   {p}
@@ -210,9 +213,9 @@ export function JovemTable({
             <button
               onClick={() => onPageChange(page + 1)}
               disabled={page === totalPages}
-              className="p-4 rounded border border-church-border/30 bg-white text-stone-400 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-50 transition-all shadow-sm hover:shadow-md"
+              className="p-5 rounded-sm border border-church-border bg-white text-stone-400 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-50 transition-all shadow-sm hover:shadow-xl active:scale-95"
             >
-              <ChevronRight size={20} strokeWidth={1.5} />
+              <ChevronRight size={24} strokeWidth={1.2} />
             </button>
           </div>
         </div>
