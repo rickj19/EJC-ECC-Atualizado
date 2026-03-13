@@ -122,7 +122,7 @@ export function EJCDashboard() {
           icon={Star} 
           colorClass="bg-emerald-100 text-emerald-600" 
         />
-        {role !== 'participante' && (
+        {role && role !== 'participante' && (
           <>
             <StatCard 
               title="Não Vivenciaram" 
@@ -144,7 +144,7 @@ export function EJCDashboard() {
         {/* Sacramentos & Bairros */}
         <div className="lg:col-span-1 space-y-8">
           {/* Sacramentos */}
-          {role !== 'participante' && (
+          {role && role !== 'participante' && (
             <div className="bg-white p-6 rounded-2xl border border-zinc-100 shadow-sm">
               <h3 className="text-sm font-bold text-zinc-900 uppercase tracking-tight mb-6 flex items-center gap-2">
                 <CheckCircle2 size={18} className="text-emerald-500" />
@@ -203,7 +203,7 @@ export function EJCDashboard() {
                 <Clock size={18} className="text-blue-500" />
                 Últimos Cadastros
               </h3>
-              {role !== 'participante' && (
+              {role && role !== 'participante' && (
                 <button 
                   onClick={() => navigate('/ejc/jovens')}
                   className="text-xs font-bold text-zinc-400 hover:text-zinc-900 transition-colors flex items-center gap-1"
@@ -221,7 +221,7 @@ export function EJCDashboard() {
                     <th className="px-6 py-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest">Jovem</th>
                     <th className="px-6 py-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest">Bairro</th>
                     <th className="px-6 py-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest">Data</th>
-                    {role !== 'participante' && <th className="px-6 py-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest text-right">Ação</th>}
+                    {role && role !== 'participante' && <th className="px-6 py-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest text-right">Ação</th>}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-zinc-50">
@@ -241,7 +241,7 @@ export function EJCDashboard() {
                           {new Date(jovem.created_at).toLocaleDateString('pt-BR')}
                         </span>
                       </td>
-                      {role !== 'participante' && (
+                      {role && role !== 'participante' && (
                         <td className="px-6 py-4 text-right">
                           <button 
                             onClick={() => navigate(`/ejc/jovens/visualizar/${jovem.id}`)}
@@ -255,7 +255,7 @@ export function EJCDashboard() {
                   ))}
                   {jovens.length === 0 && (
                     <tr>
-                      <td colSpan={role === 'participante' ? 3 : 4} className="px-6 py-12 text-center text-zinc-400 italic text-sm">
+                      <td colSpan={role && role === 'participante' ? 3 : 4} className="px-6 py-12 text-center text-zinc-400 italic text-sm">
                         Nenhum jovem cadastrado ainda.
                       </td>
                     </tr>

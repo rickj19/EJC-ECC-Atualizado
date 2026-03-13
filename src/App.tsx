@@ -13,6 +13,7 @@ import { RoleGuard } from './components/RoleGuard';
 import { PermissionGuard } from './components/PermissionGuard';
 import { UserList } from './pages/ejc/UserList';
 import { UserForm } from './pages/ejc/UserForm';
+import { LoadingScreen } from './components/LoadingScreen';
 
 export default function App() {
   return (
@@ -108,14 +109,7 @@ function EditJovemWrapper() {
     }
   }, [id]);
 
-  if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-stone-50">
-      <div className="text-center space-y-4">
-        <div className="w-12 h-12 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
-        <p className="text-stone-500 font-medium">Carregando dados do jovem...</p>
-      </div>
-    </div>
-  );
+  if (loading) return <LoadingScreen message="Carregando dados do jovem..." />;
   
   return <JovemForm initialData={jovem} isEditing={true} />;
 }

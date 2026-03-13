@@ -3,23 +3,15 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from './client';
 import { Profile, UserRole } from '../../types/auth';
 
-interface Permissions {
-  can_view_jovens: boolean;
-  can_edit_jovens: boolean;
-  can_create_users: boolean;
-  can_manage_permissions: boolean;
-}
-
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   profile: Profile | null;
   role: UserRole | null;
-  permissions: Permissions;
   loading: boolean;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
-  hasPermission: (permission: keyof Permissions) => boolean;
+  hasPermission: (permission: keyof Profile) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -30,20 +22,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const getPermissions = (p: Profile | null): Permissions => {
-    const isAdmin = p?.role === 'admin';
-    return {
-      can_view_jovens: isAdmin || (p?.can_view_jovens ?? false),
-      can_edit_jovens: isAdmin || (p?.can_edit_jovens ?? false),
-      can_create_users: isAdmin || (p?.can_create_users ?? false),
-      can_manage_permissions: isAdmin || (p?.can_manage_permissions ?? false),
-    };
-  };
-
-  const permissions = getPermissions(profile);
-
   const fetchProfile = async (userId: string) => {
     try {
+      console.log('[Auth] Fetching profile for:', userId);
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -51,12 +32,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .single();
 
       if (error) {
-        console.error('Error fetching profile:', error);
+        console.warn('[Auth] Profile not found or error:', error.message);
         return null;
       }
+      console.log('[Auth] Profile loaded successfully');
       return data as Profile;
     } catch (err) {
-      console.error('Unexpected error fetching profile:', err);
+      console.error('[Auth] Unexpected error fetching profile:', err);
       return null;
     }
   };
@@ -68,42 +50,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const signOut = async () => {
+    await supabase.auth.signOut();
+  };
+
+  const hasPermission = (permission: keyof Profile): boolean => {
+    if (!profile) return false;
+    // Admin has all permissions
+    if (profile.role === 'admin') return true;
+    
+    const val = profile[permission];
+    return typeof val === 'boolean' ? val : false;
+  };
+
   useEffect(() => {
     let mounted = true;
 
     const initializeAuth = async () => {
+      console.log('[Auth] Starting initialization...');
       try {
-        const { data: { session }, error } = await supabase.auth.getSession();
+        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
+        
         if (error) {
-          console.error('Error getting session:', error);
-          if (mounted) {
-            setSession(null);
-            setUser(null);
-            setProfile(null);
-          }
-        } else {
-          if (mounted) {
-            setSession(session);
-            const currentUser = session?.user ?? null;
-            setUser(currentUser);
+          console.error('[Auth] Session error:', error.message);
+        }
 
-            if (currentUser) {
-              const p = await fetchProfile(currentUser.id);
-              if (mounted) setProfile(p);
-            } else {
-              if (mounted) setProfile(null);
+        if (mounted) {
+          setSession(initialSession);
+          const currentUser = initialSession?.user ?? null;
+          setUser(currentUser);
+          console.log('[Auth] Session loaded:', currentUser?.email || 'No session');
+          
+          if (currentUser) {
+            const p = await fetchProfile(currentUser.id);
+            if (mounted) {
+              setProfile(p);
+              console.log('[Auth] Profile loaded:', p?.role || 'No profile');
             }
+          } else {
+            if (mounted) setProfile(null);
           }
         }
       } catch (err) {
-        console.error('Unexpected error during auth initialization:', err);
-        if (mounted) {
-          setSession(null);
-          setUser(null);
-          setProfile(null);
-        }
+        console.error('[Auth] Critical initialization error:', err);
       } finally {
         if (mounted) {
+          console.log('[Auth] Auth finished');
           setLoading(false);
         }
       }
@@ -111,14 +103,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     initializeAuth();
 
-    // Listen for changes on auth state
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
       if (!mounted) return;
-
-      console.log('Auth state changed:', event, session?.user?.email);
       
-      setSession(session);
-      const currentUser = session?.user ?? null;
+      console.log('[Auth] State changed:', event);
+      
+      setSession(currentSession);
+      const currentUser = currentSession?.user ?? null;
       setUser(currentUser);
       
       if (currentUser) {
@@ -128,9 +119,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (mounted) setProfile(null);
       }
       
-      if (mounted) {
-        setLoading(false);
-      }
+      // Ensure loading is false after any auth change
+      if (mounted) setLoading(false);
     });
 
     return () => {
@@ -139,21 +129,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  const signOut = async () => {
-    await supabase.auth.signOut();
-  };
-
-  const hasPermission = (permission: keyof Permissions) => {
-    return permissions[permission];
-  };
-
   return (
     <AuthContext.Provider value={{ 
       user, 
       session, 
       profile, 
       role: profile?.role ?? null, 
-      permissions,
       loading, 
       signOut,
       refreshProfile,
